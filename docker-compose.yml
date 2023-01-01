@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   postgres:
-    container_name: gin-example
+    container_name: go-example
     image: postgres
     environment:
       POSTGRES_USER: postgres
@@ -17,7 +17,7 @@ services:
     command: -p 10032
 
   pgadmin:
-    container_name: gin-example-admin
+    container_name: go-example-admin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: postgres@gmail.com

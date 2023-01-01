@@ -3,7 +3,6 @@ package database
 import (
 	"log"
 
-	"github.com/m-sadykov/go-example-app/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -17,7 +16,6 @@ func InitPostgres(dsn string) {
 		log.Fatalf("%+v\n", err)
 	}
 
-	err = db.AutoMigrate(&models.User{})
 	if err != nil {
 		log.Fatalf("%+v\n", err)
 	}
