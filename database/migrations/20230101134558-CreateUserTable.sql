@@ -5,7 +5,7 @@ create table public.users (
     name varchar not null,
     email varchar not null,
     password varchar not null,
-    crated_at timestamp,
+    created_at timestamp,
     updated_at timestamp,
     deleted_at timestamp
 );

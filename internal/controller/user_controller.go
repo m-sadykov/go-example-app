@@ -4,12 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	dto "github.com/m-sadykov/go-example-app/internal/controller/dto/user"
 	"github.com/m-sadykov/go-example-app/internal/service"
-	"github.com/m-sadykov/go-example-app/models"
 )
 
 type UserController interface {
 	AddUser(*gin.Context)
+	GetByEmail(c *gin.Context)
 }
 
 type userController struct {
@@ -21,17 +22,28 @@ func NewUserController(s service.UserService) UserController {
 }
 
 func (u userController) AddUser(c *gin.Context) {
-	var user models.User
-
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var data dto.UserCreateDto
+	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user, err := u.userService.Save(user)
+	user, err := u.userService.Save(data)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Error while saving user"})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"data": user})
+	c.JSON(http.StatusCreated, gin.H{"data": dto.SanitizeUser(*user)})
+}
+
+func (u userController) GetByEmail(c *gin.Context) {
+	email := c.Param("email")
+	user, _ := u.userService.Get(email)
+
+	if user != nil {
+		dto.SanitizeUser(*user)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
 }

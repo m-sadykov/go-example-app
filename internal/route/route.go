@@ -9,5 +9,6 @@ func RegisterHttpEndpoints(router *gin.Engine, c controller.UserController) {
 	userEndpoints := router.Group("/users")
 	{
 		userEndpoints.POST("", c.AddUser)
+		userEndpoints.GET(":email", c.GetByEmail)
 	}
 }

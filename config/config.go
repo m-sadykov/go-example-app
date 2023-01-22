@@ -10,6 +10,7 @@ import (
 type config struct {
 	POSTGRES_DB_URL string `env:"POSTGRES_DB_URL"`
 	APP_PORT        string `env:"APP_PORT"`
+	SALT_ROUNDS     string `env:"SALT_ROUNDS"`
 }
 
 func InitConfig() config {
