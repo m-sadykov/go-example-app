@@ -9,11 +9,10 @@ import (
 
 type config struct {
 	POSTGRES_DB_URL string `env:"POSTGRES_DB_URL"`
+	APP_PORT        string `env:"APP_PORT"`
 }
 
-var CONFIG *config
-
-func InitConfig() {
+func InitConfig() config {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
@@ -24,5 +23,5 @@ func InitConfig() {
 		log.Fatalf("%+v\n", err)
 	}
 
-	CONFIG = &cfg
+	return cfg
 }
