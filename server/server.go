@@ -19,9 +19,8 @@ type App struct {
 	userController controller.UserController
 }
 
-var cfg = config.InitConfig()
-
 func NewApp() *App {
+	cfg := config.InitConfig()
 	db := initPostgres(cfg.POSTGRES_DB_URL)
 
 	userRepo := repository.NewUserRepository(db)
@@ -39,7 +38,7 @@ func (a *App) Start(port string) {
 	route.RegisterHttpEndpoints(router, a.userController)
 
 	a.httpServer = &http.Server{
-		Addr:    ":" + cfg.APP_PORT,
+		Addr:    ":" + port,
 		Handler: router,
 	}
 
