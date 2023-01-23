@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/m-sadykov/go-example-app/config"
+	"github.com/m-sadykov/go-example-app/internal/config"
 	dto "github.com/m-sadykov/go-example-app/internal/controller/dto/user"
+	"github.com/m-sadykov/go-example-app/internal/models"
 	"github.com/m-sadykov/go-example-app/internal/repository"
-	"github.com/m-sadykov/go-example-app/models"
 )
 
 type userService struct {

@@ -3,7 +3,7 @@ package repository
 import (
 	"log"
 
-	"github.com/m-sadykov/go-example-app/models"
+	"github.com/m-sadykov/go-example-app/internal/models"
 	"gorm.io/gorm"
 )
 

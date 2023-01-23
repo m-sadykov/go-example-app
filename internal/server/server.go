@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/m-sadykov/go-example-app/config"
+	"github.com/m-sadykov/go-example-app/internal/config"
 	"github.com/m-sadykov/go-example-app/internal/controller"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/route"

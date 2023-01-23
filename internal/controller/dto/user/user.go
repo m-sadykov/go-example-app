@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	"github.com/m-sadykov/go-example-app/models"
+	"github.com/m-sadykov/go-example-app/internal/models"
 )
 
 type UserDto struct {
