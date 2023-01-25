@@ -16,8 +16,7 @@ type App struct {
 	userController user.UserController
 }
 
-func NewApp() *App {
-	cfg := config.InitConfig()
+func NewApp(cfg config.Config) *App {
 	db := postgres.InitPostgres(cfg.POSTGRES_DB_URL)
 
 	userRepo := user.NewUserRepository(db)
@@ -28,25 +27,26 @@ func NewApp() *App {
 	}
 }
 
-func (a *App) Start(port string) {
-	router := setupRouter()
-	router.Group("/api")
+func (app *App) Start(port string) {
+	router := setupRoutes(app)
 
-	user.RegisterHttpEndpoints(router, a.userController)
-
-	a.httpServer = &http.Server{
+	app.httpServer = &http.Server{
 		Addr:    ":" + port,
 		Handler: router,
 	}
 
-	if err := a.httpServer.ListenAndServe(); err != nil {
+	if err := app.httpServer.ListenAndServe(); err != nil {
 		log.Fatalf("Failed to listen and serve: %+v", err)
 	}
 }
 
-func setupRouter() *gin.Engine {
+func setupRoutes(app *App) *gin.Engine {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
+
+	router.Group("/api")
+
+	user.RegisterHttpEndpoints(router, app.userController)
 
 	return router
 }

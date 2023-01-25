@@ -8,6 +8,6 @@ import (
 func main() {
 	cfg := config.InitConfig()
 
-	app := server.NewApp()
+	app := server.NewApp(cfg)
 	app.Start(cfg.APP_PORT)
 }
