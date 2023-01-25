@@ -1,9 +1,9 @@
-package repository
+package user
 
 import (
 	"log"
 
-	"github.com/m-sadykov/go-example-app/internal/models"
+	"github.com/m-sadykov/go-example-app/internal/user/models"
 	"gorm.io/gorm"
 )
 
@@ -20,21 +20,21 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	return userRepository{db: db}
 }
 
-func (repo userRepository) Save(u *models.User) (*models.User, error) {
-	err := repo.db.Create(&u)
+func (self userRepository) Save(u *models.User) (*models.User, error) {
+	err := self.db.Create(&u)
 
 	if err != nil {
 		log.Fatal(err)
 		return nil, err.Error
 	}
 
-	return repo.Get(u.Email)
+	return self.Get(u.Email)
 }
 
-func (repo userRepository) Get(email string) (*models.User, error) {
-	var user models.User
+func (self userRepository) Get(email string) (*models.User, error) {
+	var u models.User
 
-	err := repo.db.Where(&models.User{Email: email}).First(&user).Error
+	err := self.db.Where(&models.User{Email: email}).First(&u).Error
 
 	if err != nil {
 		if err.Error() == "record not found" {
@@ -44,5 +44,5 @@ func (repo userRepository) Get(email string) (*models.User, error) {
 		return nil, err
 	}
 
-	return &user, nil
+	return &u, nil
 }

@@ -6,28 +6,25 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/m-sadykov/go-example-app/internal/config"
-	"github.com/m-sadykov/go-example-app/internal/controller"
-	"github.com/m-sadykov/go-example-app/internal/repository"
-	"github.com/m-sadykov/go-example-app/internal/route"
-	"github.com/m-sadykov/go-example-app/internal/service"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/m-sadykov/go-example-app/internal/user"
+
+	"github.com/m-sadykov/go-example-app/pkg/postgres"
 )
 
 type App struct {
 	httpServer     *http.Server
-	userController controller.UserController
+	userController user.UserController
 }
 
 func NewApp() *App {
 	cfg := config.InitConfig()
-	db := initPostgres(cfg.POSTGRES_DB_URL)
+	db := postgres.InitPostgres(cfg.POSTGRES_DB_URL)
 
-	userRepo := repository.NewUserRepository(db)
-	userService := service.NewUserService(userRepo)
+	userRepo := user.NewUserRepository(db)
+	userService := user.NewUserService(userRepo)
 
 	return &App{
-		userController: controller.NewUserController(userService),
+		userController: user.NewUserController(userService),
 	}
 }
 
@@ -35,7 +32,7 @@ func (a *App) Start(port string) {
 	router := setupRouter()
 	router.Group("/api")
 
-	route.RegisterHttpEndpoints(router, a.userController)
+	user.RegisterHttpEndpoints(router, a.userController)
 
 	a.httpServer = &http.Server{
 		Addr:    ":" + port,
@@ -52,18 +49,4 @@ func setupRouter() *gin.Engine {
 	router.SetTrustedProxies(nil)
 
 	return router
-}
-
-func initPostgres(dsn string) *gorm.DB {
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-	if err != nil {
-		log.Fatalf("%+v\n", err)
-	}
-
-	if err != nil {
-		log.Fatalf("%+v\n", err)
-	}
-
-	return db
 }

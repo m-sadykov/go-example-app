@@ -1,4 +1,4 @@
-package service
+package user
 
 import (
 	"crypto/sha1"
@@ -6,13 +6,12 @@ import (
 	"fmt"
 
 	"github.com/m-sadykov/go-example-app/internal/config"
-	dto "github.com/m-sadykov/go-example-app/internal/controller/dto/user"
-	"github.com/m-sadykov/go-example-app/internal/models"
-	"github.com/m-sadykov/go-example-app/internal/repository"
+	dto "github.com/m-sadykov/go-example-app/internal/user/dto"
+	"github.com/m-sadykov/go-example-app/internal/user/models"
 )
 
 type userService struct {
-	userRepository repository.UserRepository
+	userRepository UserRepository
 }
 
 type UserService interface {
@@ -20,29 +19,29 @@ type UserService interface {
 	Get(email string) (*models.User, error)
 }
 
-func NewUserService(repo repository.UserRepository) UserService {
+func NewUserService(repo UserRepository) UserService {
 	return userService{userRepository: repo}
 }
 
-func (u userService) Save(d dto.UserCreateDto) (*models.User, error) {
-	existingUser, err := u.userRepository.Get(d.Email)
+func (self userService) Save(d dto.UserCreateDto) (*models.User, error) {
+	existingUser, err := self.userRepository.Get(d.Email)
 
 	if existingUser != nil && existingUser.Email == d.Email {
 		err = errors.New("user with email already exists")
 		return nil, err
 	}
 
-	user := &models.User{
+	u := &models.User{
 		Name:     d.Name,
 		Email:    d.Email,
 		Password: hashPassword(d.Password),
 	}
 
-	return u.userRepository.Save(user)
+	return self.userRepository.Save(u)
 }
 
-func (u userService) Get(email string) (*models.User, error) {
-	return u.userRepository.Get(email)
+func (self userService) Get(email string) (*models.User, error) {
+	return self.userRepository.Get(email)
 }
 
 func hashPassword(password string) string {
