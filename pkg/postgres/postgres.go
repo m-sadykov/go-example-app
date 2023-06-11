@@ -1,22 +1,30 @@
 package postgres
 
 import (
+	"errors"
 	"log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func InitPostgres(dsn string) *gorm.DB {
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+const MAX_ATTEMPTS_COUNT = 7
 
-	if err != nil {
-		log.Fatalf("%+v\n", err)
+func InitPostgres(dsn string) (*gorm.DB, error) {
+	for i := 1; i <= MAX_ATTEMPTS_COUNT; i++ {
+		db, err := connectToDb(dsn)
+
+		if err != nil {
+			log.Println(err)
+			connectToDb(dsn)
+		} else {
+			return db, nil
+		}
 	}
 
-	if err != nil {
-		log.Fatalf("%+v\n", err)
-	}
+	return nil, errors.New("Database connection failed. Exceeded maximum attempts count")
+}
 
-	return db
+func connectToDb(dsn string) (*gorm.DB, error) {
+	return gorm.Open(postgres.Open(dsn), &gorm.Config{})
 }

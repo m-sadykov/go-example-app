@@ -17,7 +17,11 @@ type App struct {
 }
 
 func NewApp(cfg config.Config) *App {
-	db := postgres.InitPostgres(cfg.POSTGRES_DB_URL)
+	db, err := postgres.InitPostgres(cfg.POSTGRES_DB_URL)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	userRepo := user.NewUserRepository(db)
 	userService := user.NewUserService(userRepo)
@@ -44,9 +48,8 @@ func setupRoutes(app *App) *gin.Engine {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 
-	router.Group("/api")
-
-	user.RegisterHttpEndpoints(router, app.userController)
+	routerGroup := router.Group("/api")
+	user.RegisterHttpEndpoints(routerGroup, app.userController)
 
 	return router
 }

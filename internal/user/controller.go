@@ -12,7 +12,7 @@ type UserController interface {
 	GetByEmail(ctx *gin.Context)
 }
 
-func RegisterHttpEndpoints(router *gin.Engine, c UserController) {
+func RegisterHttpEndpoints(router *gin.RouterGroup, c UserController) {
 	userEndpoints := router.Group("/users")
 	{
 		userEndpoints.POST("", c.AddUser)
