@@ -3,26 +3,34 @@ package postgres
 import (
 	"errors"
 	"log"
+	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-const MAX_ATTEMPTS_COUNT = 7
+var MAX_ATTEMPTS_COUNT = 7
 
 func InitPostgres(dsn string) (*gorm.DB, error) {
-	for i := 1; i <= MAX_ATTEMPTS_COUNT; i++ {
-		db, err := connectToDb(dsn)
-
+	db, err := connectToDb(dsn)
+	for err != nil {
 		if err != nil {
 			log.Println(err)
-			connectToDb(dsn)
-		} else {
-			return db, nil
 		}
+
+		if MAX_ATTEMPTS_COUNT > 1 {
+			MAX_ATTEMPTS_COUNT--
+
+			time.Sleep(5 * time.Second)
+			connectToDb(dsn)
+
+			continue
+		}
+
+		return nil, errors.New("Database connection failed. Exceeded maximum attempts count")
 	}
 
-	return nil, errors.New("Database connection failed. Exceeded maximum attempts count")
+	return db, nil
 }
 
 func connectToDb(dsn string) (*gorm.DB, error) {
