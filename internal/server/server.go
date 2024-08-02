@@ -5,15 +5,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/m-sadykov/go-example-app/internal/config"
-	"github.com/m-sadykov/go-example-app/internal/user"
+	"github.com/m-sadykov/go-example-app/config"
+	v1 "github.com/m-sadykov/go-example-app/internal/controller/http/v1"
+	"github.com/m-sadykov/go-example-app/internal/usecase"
+	"github.com/m-sadykov/go-example-app/internal/usecase/repository"
 
 	"github.com/m-sadykov/go-example-app/pkg/postgres"
 )
 
 type App struct {
 	httpServer     *http.Server
-	userController user.UserController
+	userController *v1.UserController
 }
 
 func NewApp(cfg config.Config) *App {
@@ -23,11 +25,11 @@ func NewApp(cfg config.Config) *App {
 		log.Fatal(err)
 	}
 
-	userRepo := user.NewUserRepository(db)
-	userService := user.NewUserService(userRepo)
+	userRepo := repository.New(db)
+	userUseCase := usecase.New(*userRepo)
 
 	return &App{
-		userController: user.NewUserController(userService),
+		userController: v1.NewUserController(*userUseCase),
 	}
 }
 
@@ -49,7 +51,7 @@ func setupRoutes(app *App) *gin.Engine {
 	router.SetTrustedProxies(nil)
 
 	routerGroup := router.Group("/api")
-	user.RegisterHttpEndpoints(routerGroup, app.userController)
+	v1.RegisterHttpEndpoints(routerGroup, *app.userController)
 
 	return router
 }

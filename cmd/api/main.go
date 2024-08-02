@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/m-sadykov/go-example-app/internal/config"
+	"github.com/m-sadykov/go-example-app/config"
 	"github.com/m-sadykov/go-example-app/internal/server"
 )
 
