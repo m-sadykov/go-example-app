@@ -17,7 +17,7 @@ type App struct {
 }
 
 func NewApp(cfg config.Config) *App {
-	db, err := postgres.InitPostgres(cfg.POSTGRES_DB_URL)
+	db, err := postgres.InitPostgres(cfg.DB_HOST)
 
 	if err != nil {
 		log.Fatal(err)

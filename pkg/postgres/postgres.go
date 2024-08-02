@@ -27,7 +27,7 @@ func InitPostgres(dsn string) (*gorm.DB, error) {
 			continue
 		}
 
-		return nil, errors.New("Database connection failed. Exceeded maximum attempts count")
+		return nil, errors.New("database connection failed, exceeded maximum attempts count")
 	}
 
 	return db, nil

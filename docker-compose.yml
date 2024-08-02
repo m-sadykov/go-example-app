@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   postgres:
-    container_name: go-example
+    container_name: go_example
     image: postgres
     environment:
       POSTGRES_USER: postgres
@@ -11,22 +11,7 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - "10032:10032"
-    networks:
-      - postgres
-    command: -p 10032
-
-  pgadmin:
-    container_name: go-example-admin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: postgres@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: postgres
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    ports:
-      - "10604:10604"
-      - "81:81"
+      - "5432:5432"
     networks:
       - postgres
 
@@ -36,4 +21,3 @@ networks:
 
 volumes:
   postgres:
-  pgadmin:

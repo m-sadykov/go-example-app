@@ -8,9 +8,9 @@ import (
 )
 
 type Config struct {
-	POSTGRES_DB_URL string `env:"POSTGRES_DB_URL"`
-	APP_PORT        string `env:"APP_PORT"`
-	SALT_ROUNDS     string `env:"SALT_ROUNDS"`
+	DB_HOST     string `env:"DB_HOST"`
+	APP_PORT    string `env:"APP_PORT"`
+	SALT_ROUNDS string `env:"SALT_ROUNDS"`
 }
 
 func InitConfig() Config {
