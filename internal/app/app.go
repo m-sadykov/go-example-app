@@ -9,8 +9,8 @@ import (
 	v1 "github.com/m-sadykov/go-example-app/internal/controller/http/v1"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
 	"github.com/m-sadykov/go-example-app/internal/usecase/repository"
-
-	"github.com/m-sadykov/go-example-app/pkg/postgres"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type App struct {
@@ -19,7 +19,7 @@ type App struct {
 }
 
 func NewApp(cfg config.Config) *App {
-	db, err := postgres.InitPostgres(cfg.DB_HOST)
+	db, err := gorm.Open(postgres.Open(cfg.DB_HOST), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal(err)
@@ -48,7 +48,11 @@ func (app *App) Start(port string) {
 
 func setupRoutes(app *App) *gin.Engine {
 	router := gin.Default()
-	router.SetTrustedProxies(nil)
+
+	err := router.SetTrustedProxies(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	routerGroup := router.Group("/api")
 	v1.RegisterHttpEndpoints(routerGroup, *app.userController)

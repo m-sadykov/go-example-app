@@ -19,4 +19,14 @@ jobs:
       - name: Build
         run: go build -v ./...  
 
+      - name: Run go vet
+        run: go vet ./...
 
+      - name: Install staticcheck
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+      - name: Run staticcheck
+        run: staticcheck ./...
+
+      - name: Golangci-lint
+        uses: golangci/golangci-lint-action@v6.1.0
