@@ -2,8 +2,8 @@ package config
 
 import (
 	"log"
-	"os"
-	"regexp"
+	"path/filepath"
+	"runtime"
 
 	"github.com/caarlos0/env/v6"
 	"github.com/joho/godotenv"
@@ -18,14 +18,10 @@ type Config struct {
 }
 
 func InitConfig() Config {
-	projectName := regexp.MustCompile(`^(.*` + projectDir + `)`)
-	currentWorkDirectory, _ := os.Getwd()
+	_, b, _, _ := runtime.Caller(0)
+	basePath := filepath.Dir(b)
 
-	rootPath := projectName.Find([]byte(currentWorkDirectory))
-
-	log.Println(string(rootPath))
-
-	err := godotenv.Load(string(rootPath) + "/.env")
+	err := godotenv.Load(basePath + "/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
