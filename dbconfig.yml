@@ -1,5 +1,11 @@
 development:
   dialect: postgres
-  datasource: host=localhost port=10032 dbname=postgres user=postgres password=postgres sslmode=disable
+  datasource: host=localhost port=5432 dbname=postgres user=postgres password=postgres sslmode=disable
+  dir: pkg/postgres/migrations
+  table: migrations
+
+test:
+  dialect: postgres
+  datasource: host=localhost port=5432 dbname=postgres user=postgres password=postgres sslmode=disable
   dir: pkg/postgres/migrations
   table: migrations

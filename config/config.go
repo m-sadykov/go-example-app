@@ -2,6 +2,9 @@ package config
 
 import (
 	"log"
+	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/caarlos0/env/v6"
 	"github.com/joho/godotenv"
@@ -14,7 +17,18 @@ type Config struct {
 }
 
 func InitConfig() Config {
-	err := godotenv.Load()
+	var err error
+
+	_, b, _, _ := runtime.Caller(0)
+	basePath := filepath.Dir(b)
+
+	goEnv := os.Getenv("GO_ENV")
+	if goEnv == "test" {
+		err = godotenv.Load(basePath + "/.env.test")
+	} else {
+		err = godotenv.Load(basePath + "/.env")
+	}
+
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
 	}

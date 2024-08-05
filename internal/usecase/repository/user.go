@@ -11,21 +11,16 @@ type UserRepository struct {
 	db *gorm.DB
 }
 
-// type UserRepository interface {
-// 	Save(*entity.User) (*entity.User, error)
-// 	Get(email string) (*entity.User, error)
-// }
-
-func New(db *gorm.DB) *UserRepository {
+func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db}
 }
 
 func (r *UserRepository) Save(u *entity.User) (*entity.User, error) {
-	err := r.db.Create(&u)
+	res := r.db.Create(&u)
 
-	if err != nil {
-		log.Fatal(err)
-		return nil, err.Error
+	if res.Error != nil {
+		log.Fatal(res.Error)
+		return nil, res.Error
 	}
 
 	return r.Get(u.Email)
