@@ -9,8 +9,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-const projectDir = "gin-example-app"
-
 type Config struct {
 	DB_HOST     string `env:"DB_HOST"`
 	APP_PORT    string `env:"APP_PORT"`
