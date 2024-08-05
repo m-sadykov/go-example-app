@@ -37,6 +37,6 @@ jobs:
 
       - name: Run tests
         run: |
-          
+          go install github.com/rubenv/sql-migrate/...@latest
           sql-migrate up
           go test -v ./...
