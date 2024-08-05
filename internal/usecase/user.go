@@ -17,16 +17,16 @@ func NewUserUseCase(r repository.UserRepository) *UserUseCase {
 	return &UserUseCase{repo: r}
 }
 
-func (uc UserUseCase) Save(d entity.User) (*entity.User, error) {
+func (uc UserUseCase) Create(d entity.User) (*entity.User, error) {
 	newUser := &entity.User{
 		Name:     d.Name,
 		Email:    d.Email,
 		Password: hashPassword(d.Password),
 	}
 
-	u, err := uc.repo.Save(newUser)
+	u, err := uc.repo.Store(newUser)
 	if err != nil {
-		return newUser, fmt.Errorf("UserUseCase - Save - uc.repo.Save: %w", err)
+		return nil, err
 	}
 
 	return u, nil

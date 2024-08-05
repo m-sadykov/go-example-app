@@ -58,7 +58,7 @@ func (c UserController) AddUser(ctx *gin.Context) {
 		return
 	}
 
-	u, err := c.useCase.Save(data)
+	u, err := c.useCase.Create(data)
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return

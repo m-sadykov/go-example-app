@@ -14,12 +14,13 @@ import (
 )
 
 var (
-	uc  *usecase.UserUseCase
-	db  *gorm.DB
-	err error
+	uc   *usecase.UserUseCase
+	db   *gorm.DB
+	err  error
+	repo *repository.UserRepository
 )
 
-func setup() {
+func TestMain(t *testing.M) {
 	cfg := config.InitConfig()
 
 	db, err = gorm.Open(postgres.Open(cfg.DB_HOST), &gorm.Config{})
@@ -27,30 +28,48 @@ func setup() {
 		panic(err)
 	}
 
-	repo := repository.NewUserRepository(db)
+	repo = repository.NewUserRepository(db)
 	uc = usecase.NewUserUseCase(*repo)
-}
-
-func TestMain(t *testing.M) {
-	setup()
 
 	code := t.Run()
 
-	// TODO: clear test data and close database connection
+	// TODO: clear test data after each test
+	// close database connection
 	os.Exit(code)
 }
 
-func TestSave(t *testing.T) {
-	data := entity.User{
+func TestCreateUser(t *testing.T) {
+	input := entity.User{
 		Name:     "John Doe",
 		Email:    "john.doe@example.com",
 		Password: "123",
 	}
 
-	res, err := uc.Save(data)
-	if err != nil {
-		t.Error(err.Error())
+	res, _ := uc.Create(input)
+
+	assert.Equal(t, input.Name, res.Name)
+	assert.Equal(t, input.Email, res.Email)
+
+	db.Exec("delete from public.users")
+}
+
+func TestCreateUserWithUniqueEmail(t *testing.T) {
+	existingUser, _ := repo.Store(&entity.User{
+		Name:     "John Doe",
+		Email:    "john.doe@example.com",
+		Password: "123",
+	})
+
+	input := entity.User{
+		Name:     "Jock Wick",
+		Email:    existingUser.Email,
+		Password: "my_password",
 	}
 
-	assert.Equal(t, data.Name, res.Name)
+	_, err := uc.Create(input)
+
+	assert.ErrorContainsf(t, err, "duplicate", "formatted")
+	assert.Error(t, gorm.ErrDuplicatedKey, err)
+
+	db.Exec("delete from public.users")
 }

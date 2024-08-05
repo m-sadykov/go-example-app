@@ -9,5 +9,10 @@ create table public.users (
     updated_at timestamp,
     deleted_at timestamp
 );
+
+alter table only public.users
+ add constraint "users_email_uniq_constraint" unique (email);
+
 -- +migrate Down
+alter table public.users drop constraint "users_email_uniq_constraint";
 drop table public.users;

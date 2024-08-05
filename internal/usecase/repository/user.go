@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"log"
-
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"gorm.io/gorm"
 )
@@ -15,11 +13,10 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db}
 }
 
-func (r *UserRepository) Save(u *entity.User) (*entity.User, error) {
+func (r *UserRepository) Store(u *entity.User) (*entity.User, error) {
 	res := r.db.Create(&u)
 
 	if res.Error != nil {
-		log.Fatal(res.Error)
 		return nil, res.Error
 	}
 
@@ -35,7 +32,6 @@ func (r *UserRepository) Get(email string) (*entity.User, error) {
 		if err.Error() == "record not found" {
 			return nil, nil
 		}
-		log.Fatal(err)
 		return nil, err
 	}
 
