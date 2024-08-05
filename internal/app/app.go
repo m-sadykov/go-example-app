@@ -25,8 +25,8 @@ func NewApp(cfg config.Config) *App {
 		log.Fatal(err)
 	}
 
-	userRepo := repository.New(db)
-	userUseCase := usecase.New(*userRepo)
+	userRepo := repository.NewUserRepository(db)
+	userUseCase := usecase.NewUserUseCase(*userRepo)
 
 	return &App{
 		userController: v1.NewUserController(*userUseCase),
