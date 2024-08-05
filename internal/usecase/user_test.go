@@ -14,14 +14,15 @@ import (
 )
 
 var (
-	uc *usecase.UserUseCase
-	db *gorm.DB
+	uc  *usecase.UserUseCase
+	db  *gorm.DB
+	err error
 )
 
 func setup() {
 	cfg := config.InitConfig()
 
-	var db, err = gorm.Open(postgres.Open(cfg.DB_HOST), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(cfg.DB_HOST), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}

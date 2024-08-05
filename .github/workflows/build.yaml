@@ -1,4 +1,4 @@
-name: "Build App"
+name: "Build app and run tests"
 
 on:
  pull_request:
@@ -30,3 +30,6 @@ jobs:
 
       - name: Golangci-lint
         uses: golangci/golangci-lint-action@v6.1.0
+
+      - name: Run tests
+        run: go test
