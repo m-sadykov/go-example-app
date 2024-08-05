@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/api",
-            "envFile": "${workspaceFolder}/.env",
+            "envFile": "${workspaceFolder}/config/.env",
             "cwd": "${workspaceFolder}"
         },
         {
@@ -19,7 +19,7 @@
             "request": "launch",
             "mode": "test",
             "program": "${file}",
-            "envFile": "${workspaceFolder}/.env",
+            "envFile": "${workspaceFolder}/config/.env",
             "cwd": "${workspaceFolder}",
             "dlvLoadConfig":{
                 "followPointers": true,

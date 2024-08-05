@@ -3,6 +3,7 @@ package usecase
 import (
 	"crypto/sha1"
 	"fmt"
+	"log"
 
 	"github.com/m-sadykov/go-example-app/config"
 	"github.com/m-sadykov/go-example-app/internal/entity"
@@ -17,23 +18,24 @@ func NewUserUseCase(r repository.UserRepository) *UserUseCase {
 	return &UserUseCase{repo: r}
 }
 
-func (uc UserUseCase) Save(d entity.User) (*entity.User, error) {
+func (uc UserUseCase) Create(d entity.User) (*entity.User, error) {
 	newUser := &entity.User{
 		Name:     d.Name,
 		Email:    d.Email,
 		Password: hashPassword(d.Password),
 	}
 
-	u, err := uc.repo.Save(newUser)
+	u, err := uc.repo.Store(newUser)
 	if err != nil {
-		return newUser, fmt.Errorf("UserUseCase - Save - uc.repo.Save: %w", err)
+		log.Println(err)
+		return nil, err
 	}
 
 	return u, nil
 }
 
-func (us UserUseCase) Get(email string) (*entity.User, error) {
-	return us.repo.Get(email)
+func (us UserUseCase) GetOneById(id uint) (*entity.User, error) {
+	return us.repo.Get(repository.FindOneParam{ID: id})
 }
 
 func hashPassword(password string) string {

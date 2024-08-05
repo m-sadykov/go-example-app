@@ -1,11 +1,15 @@
 package repository
 
 import (
-	"log"
-
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"gorm.io/gorm"
 )
+
+type FindOneParam struct {
+	ID    uint
+	Name  string
+	Email string
+}
 
 type UserRepository struct {
 	db *gorm.DB
@@ -15,28 +19,32 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db}
 }
 
-func (r *UserRepository) Save(u *entity.User) (*entity.User, error) {
+func (r *UserRepository) Store(u *entity.User) (*entity.User, error) {
 	res := r.db.Create(&u)
 
 	if res.Error != nil {
-		log.Fatal(res.Error)
 		return nil, res.Error
 	}
 
-	return r.Get(u.Email)
+	return r.Get(FindOneParam{Email: u.Email})
 }
 
-func (r *UserRepository) Get(email string) (*entity.User, error) {
+func (r *UserRepository) Get(param FindOneParam) (*entity.User, error) {
 	var u entity.User
 
-	err := r.db.Where(&entity.User{Email: email}).First(&u).Error
+	res := r.db.Where(param).First(&u)
 
-	if err != nil {
+	if res.Error != nil {
+		err := res.Error
 		if err.Error() == "record not found" {
 			return nil, nil
 		}
-		log.Fatal(err)
+
 		return nil, err
+	}
+
+	if res.RowsAffected == 0 {
+		return nil, nil
 	}
 
 	return &u, nil
