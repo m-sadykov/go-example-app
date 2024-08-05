@@ -2,6 +2,7 @@ package http
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -43,7 +44,7 @@ func RegisterHttpEndpoints(router *gin.RouterGroup, c UserController) {
 	userEndpoints := router.Group("/users")
 	{
 		userEndpoints.POST("", c.AddUser)
-		userEndpoints.GET(":email", c.GetByEmail)
+		userEndpoints.GET(":id", c.GetById)
 	}
 }
 
@@ -67,9 +68,9 @@ func (c UserController) AddUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"data": SanitizeUser(*u)})
 }
 
-func (c UserController) GetByEmail(ctx *gin.Context) {
-	email := ctx.Param("email")
-	u, _ := c.useCase.Get(email)
+func (c UserController) GetById(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	u, _ := c.useCase.GetOneById(uint(id))
 
 	if u != nil {
 		SanitizeUser(*u)

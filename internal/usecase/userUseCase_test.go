@@ -63,13 +63,37 @@ func TestCreateUserWithUniqueEmail(t *testing.T) {
 	input := entity.User{
 		Name:     "Jock Wick",
 		Email:    existingUser.Email,
-		Password: "my_password",
+		Password: "12345",
 	}
 
 	_, err := uc.Create(input)
 
-	assert.ErrorContainsf(t, err, "duplicate", "formatted")
+	assert.ErrorContainsf(t, err, "unique constraint", "formatted")
 	assert.Error(t, gorm.ErrDuplicatedKey, err)
+
+	db.Exec("delete from public.users")
+}
+
+func TestGetOneById(t *testing.T) {
+	existingUser, _ := repo.Store(&entity.User{
+		Name:     "John Doe",
+		Email:    "john.doe@example.com",
+		Password: "123",
+	})
+
+	res, _ := uc.GetOneById(existingUser.ID)
+
+	assert.Equal(t, existingUser.ID, res.ID)
+
+	db.Exec("delete from public.users")
+}
+
+func TestNotFoundById(t *testing.T) {
+	var notFoundId uint = 0
+
+	res, _ := uc.GetOneById(notFoundId)
+
+	assert.Nil(t, res)
 
 	db.Exec("delete from public.users")
 }
