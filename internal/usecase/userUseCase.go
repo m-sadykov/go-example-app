@@ -19,23 +19,40 @@ func NewUserUseCase(r repository.UserRepository) *UserUseCase {
 }
 
 func (uc UserUseCase) Create(d entity.User) (*entity.User, error) {
-	newUser := &entity.User{
+	input := &entity.User{
 		Name:     d.Name,
 		Email:    d.Email,
 		Password: hashPassword(d.Password),
 	}
-
-	u, err := uc.repo.Store(newUser)
+	newUser, err := uc.repo.Store(input)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	return u, nil
+	return newUser, nil
 }
 
-func (us UserUseCase) GetOneById(id uint) (*entity.User, error) {
-	return us.repo.Get(repository.FindOneParam{ID: id})
+func (uc UserUseCase) GetOneById(id uint) (*entity.User, error) {
+	return uc.repo.Get(repository.FindOneParam{ID: id})
+}
+
+func (uc UserUseCase) Update(id uint, param repository.UserUpdateParam) (*entity.User, error) {
+	existingUser, err := uc.repo.Get(repository.FindOneParam{ID: id})
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	if existingUser == nil {
+		return nil, fmt.Errorf("user with given id: %d not found", id)
+	}
+
+	return uc.repo.Update(id, param)
+}
+
+func (uc UserUseCase) Delete(id uint) {
+	uc.repo.Delete(id)
 }
 
 func hashPassword(password string) string {
