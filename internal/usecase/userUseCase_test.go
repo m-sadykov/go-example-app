@@ -50,15 +50,11 @@ func TestCreateUser(t *testing.T) {
 	assert.Equal(t, input.Name, res.Name)
 	assert.Equal(t, input.Email, res.Email)
 
-	db.Exec("delete from public.users")
+	clearDatabase()
 }
 
 func TestCreateUserWithUniqueEmail(t *testing.T) {
-	existingUser, _ := repo.Store(&entity.User{
-		Name:     "John Doe",
-		Email:    "john.doe@example.com",
-		Password: "123",
-	})
+	existingUser, _ := createUser()
 
 	input := entity.User{
 		Name:     "Jock Wick",
@@ -71,21 +67,17 @@ func TestCreateUserWithUniqueEmail(t *testing.T) {
 	assert.ErrorContainsf(t, err, "unique constraint", "formatted")
 	assert.Error(t, gorm.ErrDuplicatedKey, err)
 
-	db.Exec("delete from public.users")
+	clearDatabase()
 }
 
 func TestGetOneById(t *testing.T) {
-	existingUser, _ := repo.Store(&entity.User{
-		Name:     "John Doe",
-		Email:    "john.doe@example.com",
-		Password: "123",
-	})
+	existingUser, _ := createUser()
 
 	res, _ := uc.GetOneById(existingUser.ID)
 
 	assert.Equal(t, existingUser.ID, res.ID)
 
-	db.Exec("delete from public.users")
+	clearDatabase()
 }
 
 func TestNotFoundById(t *testing.T) {
@@ -95,5 +87,49 @@ func TestNotFoundById(t *testing.T) {
 
 	assert.Nil(t, res)
 
+	clearDatabase()
+}
+
+func TestUpdateUser(t *testing.T) {
+	var expectedEmail string = "new_email@test.com"
+	existingUser, _ := createUser()
+
+	res, _ := uc.Update(existingUser.ID, repository.UserUpdateParam{Email: expectedEmail})
+
+	assert.Equal(t, expectedEmail, res.Email)
+
+	clearDatabase()
+}
+
+func TestFailUpdateUser(t *testing.T) {
+	var notFoundId uint = 0
+
+	_, err := uc.Update(notFoundId, repository.UserUpdateParam{Name: "Rob Pike"})
+
+	assert.ErrorContainsf(t, err, "not found", "formatted")
+
+	clearDatabase()
+}
+
+func TestDeleteUser(t *testing.T) {
+	existingUser, _ := createUser()
+
+	uc.Delete(existingUser.ID)
+	res, _ := uc.GetOneById(existingUser.ID)
+
+	assert.Nil(t, res)
+
+	clearDatabase()
+}
+
+func createUser() (*entity.User, error) {
+	return repo.Store(&entity.User{
+		Name:     "John Doe",
+		Email:    "john.doe@example.com",
+		Password: "123",
+	})
+}
+
+func clearDatabase() {
 	db.Exec("delete from public.users")
 }

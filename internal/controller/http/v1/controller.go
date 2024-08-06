@@ -56,13 +56,11 @@ func (c UserController) AddUser(ctx *gin.Context) {
 	var data entity.User
 	if err := ctx.ShouldBindJSON(&data); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
 	}
 
 	u, err := c.useCase.Create(data)
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
-		return
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"data": SanitizeUser(*u)})
@@ -70,11 +68,11 @@ func (c UserController) AddUser(ctx *gin.Context) {
 
 func (c UserController) GetById(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
-	u, _ := c.useCase.GetOneById(uint(id))
 
-	if u != nil {
-		SanitizeUser(*u)
+	u, err := c.useCase.GetOneById(uint(id))
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": u})
+	ctx.JSON(http.StatusOK, gin.H{"data": SanitizeUser(*u)})
 }
