@@ -23,6 +23,7 @@ var urlPrefix = "/api"
 
 func TestMain(t *testing.M) {
 	var err error
+
 	gin.SetMode(gin.TestMode)
 	cfg := config.InitConfig()
 
@@ -46,9 +47,6 @@ func TestCreateUser(t *testing.T) {
 
 	assert.Equal(t, http.StatusCreated, req.Code)
 
-	var response handler.UserResponseDto
-	json.Unmarshal(req.Body.Bytes(), &response)
-
 	clearDatabase()
 }
 
@@ -69,7 +67,8 @@ func makeRequest(method, url string, body interface{}) *httptest.ResponseRecorde
 	requestBody, _ := json.Marshal(body)
 
 	req := httptest.NewRequest(method, urlPrefix+url, strings.NewReader(string(requestBody)))
-	// req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+
 	recorder := httptest.NewRecorder()
 
 	router().ServeHTTP(recorder, req)
