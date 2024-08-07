@@ -1,4 +1,4 @@
-package http
+package handler
 
 import (
 	"net/http"
@@ -43,11 +43,11 @@ func SanitizeUser(u entity.User) UserResponseDto {
 	}
 }
 
-type UserController struct {
+type UserHandler struct {
 	useCase usecase.UserUseCase
 }
 
-func RegisterHttpEndpoints(router *gin.RouterGroup, c UserController) {
+func RegisterHttpEndpoints(router *gin.RouterGroup, c UserHandler) {
 	userEndpoints := router.Group("/users")
 	{
 		userEndpoints.POST("", c.AddUser)
@@ -57,8 +57,8 @@ func RegisterHttpEndpoints(router *gin.RouterGroup, c UserController) {
 	}
 }
 
-func NewUserController(uc usecase.UserUseCase) *UserController {
-	return &UserController{useCase: uc}
+func NewUserHandler(uc usecase.UserUseCase) *UserHandler {
+	return &UserHandler{useCase: uc}
 }
 
 // AddUser godoc
@@ -70,7 +70,7 @@ func NewUserController(uc usecase.UserUseCase) *UserController {
 //	@Param		user	body		UserCreateDto	true	"create user"
 //	@Success	201		{object}	UserResponseDto
 //	@Router		/users [post]
-func (c UserController) AddUser(ctx *gin.Context) {
+func (c UserHandler) AddUser(ctx *gin.Context) {
 	var data entity.User
 	if err := ctx.ShouldBindJSON(&data); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -81,7 +81,7 @@ func (c UserController) AddUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"data": SanitizeUser(*u)})
+	ctx.JSON(http.StatusCreated, gin.H{"user": SanitizeUser(*u)})
 }
 
 // GetById godoc
@@ -93,7 +93,7 @@ func (c UserController) AddUser(ctx *gin.Context) {
 //	@Param		id	path		uint	true	"User ID"
 //	@Success	200	{object}	UserResponseDto
 //	@Router		/users/{id} [get]
-func (c UserController) GetById(ctx *gin.Context) {
+func (c UserHandler) GetById(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
 	u, err := c.useCase.GetOneById(uint(id))
@@ -114,7 +114,7 @@ func (c UserController) GetById(ctx *gin.Context) {
 //	@Param		user	body		UserUpdateDto	true	"update user"
 //	@Success	200		{object}	UserResponseDto
 //	@Router		/users/{id} [put]
-func (c UserController) UpdateUser(ctx *gin.Context) {
+func (c UserHandler) UpdateUser(ctx *gin.Context) {
 	var input repository.UserUpdateParam
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
@@ -139,7 +139,7 @@ func (c UserController) UpdateUser(ctx *gin.Context) {
 //	@Param		id	path	uint	true	"User ID"
 //	@Success	200
 //	@Router		/users/{id} [delete]
-func (c UserController) Delete(ctx *gin.Context) {
+func (c UserHandler) Delete(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
 	c.useCase.Delete(uint(id))
