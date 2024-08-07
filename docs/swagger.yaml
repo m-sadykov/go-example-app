@@ -1,0 +1,125 @@
+basePath: /api
+definitions:
+  http.UserCreateDto:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  http.UserResponseDto:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  http.UserUpdateDto:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  title: Swagger GO Example App API
+  version: "1.0"
+paths:
+  /users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: create user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/http.UserCreateDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/http.UserResponseDto'
+      summary: Create new user
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete user by given id
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.UserResponseDto'
+      summary: Get user by id
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: update user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/http.UserUpdateDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.UserResponseDto'
+      summary: Update user for given id
+      tags:
+      - users
+swagger: "2.0"
