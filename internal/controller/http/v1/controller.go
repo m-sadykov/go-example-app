@@ -26,6 +26,12 @@ type UserCreateDto struct {
 	Password string `json:"password"`
 }
 
+type UserUpdateDto struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func SanitizeUser(u entity.User) UserResponseDto {
 	return UserResponseDto{
 		ID:        u.ID,
@@ -61,10 +67,9 @@ func NewUserController(uc usecase.UserUseCase) *UserController {
 //	@Tags		users
 //	@Accept		json
 //	@Produce	json
-//	@Param		user	body		UserCreateDto	true	"UserCreateDto JSON"
+//	@Param		user	body		UserCreateDto	true	"create user"
 //	@Success	201		{object}	UserResponseDto
-//
-// @Router  /users [post]
+//	@Router		/users [post]
 func (c UserController) AddUser(ctx *gin.Context) {
 	var data entity.User
 	if err := ctx.ShouldBindJSON(&data); err != nil {
@@ -79,6 +84,15 @@ func (c UserController) AddUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"data": SanitizeUser(*u)})
 }
 
+// GetById godoc
+//
+//	@Summary	Get user by id
+//	@Tags		users
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		uint	true	"User ID"
+//	@Success	200	{object}	UserResponseDto
+//	@Router		/users/{id} [get]
 func (c UserController) GetById(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
@@ -90,6 +104,16 @@ func (c UserController) GetById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": SanitizeUser(*u)})
 }
 
+// UpdateUser godoc
+//
+//	@Summary	Update user for given id
+//	@Tags		users
+//	@Accept		json
+//	@Produce	json
+//	@Param		id		path		uint			true	"User ID"
+//	@Param		user	body		UserUpdateDto	true	"update user"
+//	@Success	200		{object}	UserResponseDto
+//	@Router		/users/{id} [put]
 func (c UserController) UpdateUser(ctx *gin.Context) {
 	var input repository.UserUpdateParam
 	id, _ := strconv.Atoi(ctx.Param("id"))
@@ -106,6 +130,15 @@ func (c UserController) UpdateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": SanitizeUser(*u)})
 }
 
+// Delete godoc
+//
+//	@Summary	Delete user by given id
+//	@Tags		users
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path	uint	true	"User ID"
+//	@Success	200
+//	@Router		/users/{id} [delete]
 func (c UserController) Delete(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
