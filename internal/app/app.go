@@ -9,6 +9,8 @@ import (
 	v1 "github.com/m-sadykov/go-example-app/internal/controller/http/v1"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
 	"github.com/m-sadykov/go-example-app/internal/usecase/repository"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -53,6 +55,8 @@ func setupRoutes(app *App) *gin.Engine {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	routerGroup := router.Group("/api")
 	v1.RegisterHttpEndpoints(routerGroup, *app.userController)
