@@ -40,7 +40,6 @@ func TestMain(t *testing.M) {
 	repo = repository.NewUserRepository(db)
 
 	code := t.Run()
-	clearDatabase()
 	os.Exit(code)
 }
 
@@ -55,6 +54,8 @@ func TestCreateUser(t *testing.T) {
 	req := makeRequest("POST", "/users", input)
 
 	assert.Equal(t, http.StatusCreated, req.Code)
+
+	clearDatabase()
 }
 
 // FIXME: test received response values
@@ -65,6 +66,8 @@ func TestGetUser(t *testing.T) {
 	req := makeRequest("GET", url, nil)
 
 	assert.Equal(t, http.StatusOK, req.Code)
+
+	clearDatabase()
 }
 
 func TestUpdateUser(t *testing.T) {
@@ -78,6 +81,8 @@ func TestUpdateUser(t *testing.T) {
 	req := makeRequest("PUT", url, input)
 
 	assert.Equal(t, http.StatusOK, req.Code)
+
+	clearDatabase()
 }
 
 func TestDeleteUser(t *testing.T) {
@@ -89,6 +94,8 @@ func TestDeleteUser(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, req.Code)
 	assert.Nil(t, res)
+
+	clearDatabase()
 }
 
 func router() *gin.Engine {
