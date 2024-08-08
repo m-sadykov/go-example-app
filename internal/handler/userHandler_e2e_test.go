@@ -1,15 +1,17 @@
 package handler_test
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/m-sadykov/go-example-app/config"
+	"github.com/m-sadykov/go-example-app/internal/entity"
 	"github.com/m-sadykov/go-example-app/internal/handler"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
 	"github.com/m-sadykov/go-example-app/internal/usecase/repository"
@@ -18,7 +20,10 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var (
+	db   *gorm.DB
+	repo *repository.UserRepository
+)
 var urlPrefix = "/api"
 
 func TestMain(t *testing.M) {
@@ -32,10 +37,14 @@ func TestMain(t *testing.M) {
 		panic(err)
 	}
 
+	repo = repository.NewUserRepository(db)
+
 	code := t.Run()
+	clearDatabase()
 	os.Exit(code)
 }
 
+// TODO: add error case tests
 func TestCreateUser(t *testing.T) {
 	input := handler.UserCreateDto{
 		Name:     "John Doe",
@@ -46,15 +55,46 @@ func TestCreateUser(t *testing.T) {
 	req := makeRequest("POST", "/users", input)
 
 	assert.Equal(t, http.StatusCreated, req.Code)
+}
 
-	clearDatabase()
+// FIXME: test received response values
+func TestGetUser(t *testing.T) {
+	existingUser, _ := createUser()
+
+	url := fmt.Sprintf("/users/%d", existingUser.ID)
+	req := makeRequest("GET", url, nil)
+
+	assert.Equal(t, http.StatusOK, req.Code)
+}
+
+func TestUpdateUser(t *testing.T) {
+	input := repository.UserUpdateParam{
+		Name: "Alex",
+	}
+
+	existingUser, _ := createUser()
+	url := fmt.Sprintf("/users/%d", existingUser.ID)
+
+	req := makeRequest("PUT", url, input)
+
+	assert.Equal(t, http.StatusOK, req.Code)
+}
+
+func TestDeleteUser(t *testing.T) {
+	existingUser, _ := createUser()
+
+	url := fmt.Sprintf("/users/%d", existingUser.ID)
+	req := makeRequest("DELETE", url, nil)
+	res, _ := repo.Get(repository.FindOneParam{ID: existingUser.ID})
+
+	assert.Equal(t, http.StatusOK, req.Code)
+	assert.Nil(t, res)
 }
 
 func router() *gin.Engine {
 	router := gin.Default()
 	routerGroup := router.Group(urlPrefix)
 
-	repo := repository.NewUserRepository(db)
 	uc := usecase.NewUserUseCase(*repo)
 	userHandler := handler.NewUserHandler(*uc)
 
@@ -66,8 +106,8 @@ func router() *gin.Engine {
 func makeRequest(method, url string, body interface{}) *httptest.ResponseRecorder {
 	requestBody, _ := json.Marshal(body)
 
-	req := httptest.NewRequest(method, urlPrefix+url, strings.NewReader(string(requestBody)))
-	req.Header.Add("Content-Type", "application/json")
+	req, _ := http.NewRequest(method, urlPrefix+url, bytes.NewBuffer(requestBody))
+	// req.Header.Add("Content-Type", "application/json")
 
 	recorder := httptest.NewRecorder()
 
@@ -78,4 +118,12 @@ func makeRequest(method, url string, body interface{}) *httptest.ResponseRecorde
 
 func clearDatabase() {
 	db.Exec("delete from public.users")
+}
+
+func createUser() (*entity.User, error) {
+	return repo.Store(&entity.User{
+		Name:     "John Doe",
+		Email:    "john.doe@example.com",
+		Password: "123",
+	})
 }

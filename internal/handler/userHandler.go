@@ -53,7 +53,7 @@ func RegisterHttpEndpoints(router *gin.RouterGroup, c UserHandler) {
 		userEndpoints.POST("", c.AddUser)
 		userEndpoints.GET(":id", c.GetById)
 		userEndpoints.PUT(":id", c.UpdateUser)
-		userEndpoints.DELETE(":id")
+		userEndpoints.DELETE(":id", c.Delete)
 	}
 }
 
@@ -144,5 +144,5 @@ func (c UserHandler) Delete(ctx *gin.Context) {
 
 	c.useCase.Delete(uint(id))
 
-	ctx.JSON(http.StatusOK, nil)
+	ctx.JSON(http.StatusOK, gin.H{"data": nil})
 }
