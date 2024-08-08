@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/m-sadykov/go-example-app/config"
-	v1 "github.com/m-sadykov/go-example-app/internal/controller/http/v1"
+	"github.com/m-sadykov/go-example-app/internal/handler"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
 	"github.com/m-sadykov/go-example-app/internal/usecase/repository"
 	swaggerFiles "github.com/swaggo/files"
@@ -16,8 +16,8 @@ import (
 )
 
 type App struct {
-	httpServer     *http.Server
-	userController *v1.UserController
+	httpServer  *http.Server
+	userHandler *handler.UserHandler
 }
 
 func NewApp(cfg config.Config) *App {
@@ -31,7 +31,7 @@ func NewApp(cfg config.Config) *App {
 	userUseCase := usecase.NewUserUseCase(*userRepo)
 
 	return &App{
-		userController: v1.NewUserController(*userUseCase),
+		userHandler: handler.NewUserHandler(*userUseCase),
 	}
 }
 
@@ -59,7 +59,7 @@ func setupRoutes(app *App) *gin.Engine {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	routerGroup := router.Group("/api")
-	v1.RegisterHttpEndpoints(routerGroup, *app.userController)
+	handler.RegisterHttpEndpoints(routerGroup, *app.userHandler)
 
 	return router
 }

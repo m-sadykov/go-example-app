@@ -24,6 +24,7 @@ func (uc UserUseCase) Create(d entity.User) (*entity.User, error) {
 		Email:    d.Email,
 		Password: hashPassword(d.Password),
 	}
+
 	newUser, err := uc.repo.Store(input)
 	if err != nil {
 		log.Println(err)
