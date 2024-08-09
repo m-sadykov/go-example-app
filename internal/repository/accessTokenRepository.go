@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"time"
-
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"gorm.io/gorm"
 )
@@ -15,7 +13,7 @@ func NewAccessTokenRepository(db *gorm.DB) *AccessTokenRepository {
 	return &AccessTokenRepository{db}
 }
 
-func (r *AccessTokenRepository) Create(tokenString string, expiresAt time.Time, user entity.User) (*entity.AccessToken, error) {
+func (r *AccessTokenRepository) Create(tokenString string, user entity.User) (*entity.AccessToken, error) {
 
 	res := r.db.Create(&entity.AccessToken{
 		Token:  tokenString,

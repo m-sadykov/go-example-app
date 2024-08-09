@@ -3,7 +3,7 @@
 create table public.access_tokens (
     id serial primary key,
     token varchar not null,
-    user_id serial
+    user_id serial,
     created_at timestamp,
     updated_at timestamp,
     deleted_at timestamp
