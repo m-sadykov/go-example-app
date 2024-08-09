@@ -30,7 +30,7 @@ func (uc AuthUseCase) Login(email, password string) (*entity.AccessToken, error)
 		return nil, errors.New("invalid user email or password")
 	}
 
-	return uc.accessToken.CreateAccessToken(*user)
+	return uc.accessToken.CreateAccessToken(user)
 }
 
 func (uc AuthUseCase) Logout(token string) {

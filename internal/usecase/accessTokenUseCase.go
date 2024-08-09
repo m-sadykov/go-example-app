@@ -25,7 +25,7 @@ func NewAccessTokenUseCase(r repository.AccessTokenRepository) *AccessTokenUseCa
 	return &AccessTokenUseCase{repo: r}
 }
 
-func (uc AccessTokenUseCase) CreateAccessToken(user entity.User) (*entity.AccessToken, error) {
+func (uc AccessTokenUseCase) CreateAccessToken(user *entity.User) (*entity.AccessToken, error) {
 	cfg := config.InitConfig()
 	secret := []byte(cfg.JWT_SECRET)
 	expiresAt := time.Now().Add(30 * time.Minute)
@@ -36,11 +36,11 @@ func (uc AccessTokenUseCase) CreateAccessToken(user entity.User) (*entity.Access
 		ExpiresAt: expiresAt,
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(secret)
 
 	if err != nil {
-		log.Println("error signing token", err)
+		log.Println("error signing token:", err)
 		return nil, err
 	}
 

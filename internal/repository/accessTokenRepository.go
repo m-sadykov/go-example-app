@@ -13,12 +13,11 @@ func NewAccessTokenRepository(db *gorm.DB) *AccessTokenRepository {
 	return &AccessTokenRepository{db}
 }
 
-func (r *AccessTokenRepository) Create(tokenString string, user entity.User) (*entity.AccessToken, error) {
+func (r *AccessTokenRepository) Create(tokenString string, user *entity.User) (*entity.AccessToken, error) {
 
 	res := r.db.Create(&entity.AccessToken{
 		Token:  tokenString,
 		UserID: user.ID,
-		User:   user,
 	})
 
 	if res.Error != nil {
