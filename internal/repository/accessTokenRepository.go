@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"log"
+
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"gorm.io/gorm"
 )
@@ -14,13 +16,13 @@ func NewAccessTokenRepository(db *gorm.DB) *AccessTokenRepository {
 }
 
 func (r *AccessTokenRepository) Create(tokenString string, user *entity.User) (*entity.AccessToken, error) {
-
 	res := r.db.Create(&entity.AccessToken{
 		Token:  tokenString,
 		UserID: user.ID,
 	})
 
 	if res.Error != nil {
+		log.Println(res.Error)
 		return nil, res.Error
 	}
 
@@ -32,6 +34,7 @@ func (r *AccessTokenRepository) Get(token string) (*entity.AccessToken, error) {
 
 	res := r.db.Where(&entity.AccessToken{Token: token}).First(&t)
 	if res.Error != nil {
+		log.Println(res.Error)
 		return nil, res.Error
 	}
 

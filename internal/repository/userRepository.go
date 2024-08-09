@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"gorm.io/gorm"
@@ -31,6 +32,7 @@ func (r *UserRepository) Store(u *entity.User) (*entity.User, error) {
 	res := r.db.Create(&u)
 
 	if res.Error != nil {
+		log.Println(res.Error)
 		return nil, res.Error
 	}
 
