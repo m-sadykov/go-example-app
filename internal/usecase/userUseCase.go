@@ -7,7 +7,7 @@ import (
 
 	"github.com/m-sadykov/go-example-app/config"
 	"github.com/m-sadykov/go-example-app/internal/entity"
-	"github.com/m-sadykov/go-example-app/internal/usecase/repository"
+	"github.com/m-sadykov/go-example-app/internal/repository"
 )
 
 type UserUseCase struct {

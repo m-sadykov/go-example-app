@@ -6,8 +6,8 @@ import (
 
 	"github.com/m-sadykov/go-example-app/config"
 	"github.com/m-sadykov/go-example-app/internal/entity"
+	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
-	"github.com/m-sadykov/go-example-app/internal/usecase/repository"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
