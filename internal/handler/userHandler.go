@@ -7,8 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/m-sadykov/go-example-app/internal/entity"
+	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
-	"github.com/m-sadykov/go-example-app/internal/usecase/repository"
 )
 
 type UserResponseDto struct {
