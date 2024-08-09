@@ -46,3 +46,7 @@ func (uc AccessTokenUseCase) CreateAccessToken(user entity.User) (*entity.Access
 
 	return uc.repo.Create(tokenString, expiresAt, user)
 }
+
+func (uc AccessTokenUseCase) Remove(token string) {
+	uc.repo.Delete(token)
+}

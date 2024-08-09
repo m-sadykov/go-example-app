@@ -33,6 +33,10 @@ func (uc AuthUseCase) Login(email, password string) (*entity.AccessToken, error)
 	return uc.accessToken.CreateAccessToken(*user)
 }
 
+func (uc AuthUseCase) Logout(token string) {
+	uc.accessToken.Remove(token)
+}
+
 func validateUserPassword(password, hashedPassword string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 

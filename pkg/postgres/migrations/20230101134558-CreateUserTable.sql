@@ -11,8 +11,9 @@ create table public.users (
 );
 
 alter table only public.users
- add constraint "users_email_uniq_constraint" unique (email);
+    add constraint "users_email_uniq_constraint" unique (email);
 
 -- +migrate Down
 alter table public.users drop constraint "users_email_uniq_constraint";
+
 drop table public.users;

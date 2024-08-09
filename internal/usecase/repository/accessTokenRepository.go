@@ -18,10 +18,9 @@ func NewAccessTokenRepository(db *gorm.DB) *AccessTokenRepository {
 func (r *AccessTokenRepository) Create(tokenString string, expiresAt time.Time, user entity.User) (*entity.AccessToken, error) {
 
 	res := r.db.Create(&entity.AccessToken{
-		Token:     tokenString,
-		ExpiresAt: expiresAt,
-		UserID:    user.ID,
-		User:      user,
+		Token:  tokenString,
+		UserID: user.ID,
+		User:   user,
 	})
 
 	if res.Error != nil {
@@ -40,4 +39,10 @@ func (r *AccessTokenRepository) Get(token string) (*entity.AccessToken, error) {
 	}
 
 	return &t, nil
+}
+
+func (r *AccessTokenRepository) Delete(token string) {
+	var t entity.AccessToken
+
+	r.db.Where(&entity.AccessToken{Token: token}).Delete(&t)
 }
