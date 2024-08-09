@@ -14,6 +14,7 @@ type Config struct {
 	DB_HOST     string `env:"DB_HOST"`
 	APP_PORT    string `env:"APP_PORT"`
 	SALT_ROUNDS string `env:"SALT_ROUNDS"`
+	JWT_SECRET  string `env:"JWT_SECRET"`
 }
 
 func InitConfig() Config {
