@@ -54,12 +54,12 @@ func (h AuthHandler) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	res, err := h.useCase.Login(input.Email, input.Password)
+	token, err := h.useCase.Login(input.Email, input.Password)
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"data": res})
+	ctx.JSON(http.StatusCreated, gin.H{"data": token})
 }
 
 // Logout godoc

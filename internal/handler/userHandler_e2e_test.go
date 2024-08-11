@@ -1,30 +1,19 @@
 package handler_test
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/http/httptest"
 	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/m-sadykov/go-example-app/config"
-	"github.com/m-sadykov/go-example-app/internal/entity"
 	"github.com/m-sadykov/go-example-app/internal/handler"
 	"github.com/m-sadykov/go-example-app/internal/repository"
-	"github.com/m-sadykov/go-example-app/internal/usecase"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-var (
-	db   *gorm.DB
-	repo *repository.UserRepository
-)
-var urlPrefix = "/api"
 
 func TestMain(t *testing.M) {
 	var err error
@@ -37,7 +26,7 @@ func TestMain(t *testing.M) {
 		panic(err)
 	}
 
-	repo = repository.NewUserRepository(db)
+	userRepo = repository.NewUserRepository(db)
 
 	code := t.Run()
 	os.Exit(code)
@@ -90,47 +79,10 @@ func TestDeleteUser(t *testing.T) {
 
 	url := fmt.Sprintf("/users/%d", existingUser.ID)
 	req := makeRequest("DELETE", url, nil)
-	res, _ := repo.Get(repository.FindOneParam{ID: existingUser.ID})
+	res, _ := userRepo.Get(repository.FindOneParam{ID: existingUser.ID})
 
 	assert.Equal(t, http.StatusOK, req.Code)
 	assert.Nil(t, res)
 
 	clearDatabase()
-}
-
-func router() *gin.Engine {
-	router := gin.Default()
-	routerGroup := router.Group(urlPrefix)
-
-	uc := usecase.NewUserUseCase(*repo)
-	userHandler := handler.NewUserHandler(*uc)
-
-	handler.RegisterUserEndpoints(routerGroup, *userHandler)
-
-	return router
-}
-
-func makeRequest(method, url string, body interface{}) *httptest.ResponseRecorder {
-	requestBody, _ := json.Marshal(body)
-
-	req, _ := http.NewRequest(method, urlPrefix+url, bytes.NewBuffer(requestBody))
-	// req.Header.Add("Content-Type", "application/json")
-
-	recorder := httptest.NewRecorder()
-
-	router().ServeHTTP(recorder, req)
-
-	return recorder
-}
-
-func clearDatabase() {
-	db.Exec("delete from public.users")
-}
-
-func createUser() (*entity.User, error) {
-	return repo.Store(&entity.User{
-		Name:     "John Doe",
-		Email:    "john.doe@example.com",
-		Password: "123",
-	})
 }
