@@ -59,7 +59,7 @@ func setupRoutes(app *App) *gin.Engine {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	routerGroup := router.Group("/api")
-	handler.RegisterHttpEndpoints(routerGroup, *app.userHandler)
+	handler.RegisterUserEndpoints(routerGroup, *app.userHandler)
 
 	return router
 }

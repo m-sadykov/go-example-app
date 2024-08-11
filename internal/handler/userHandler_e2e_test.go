@@ -105,7 +105,7 @@ func router() *gin.Engine {
 	uc := usecase.NewUserUseCase(*repo)
 	userHandler := handler.NewUserHandler(*uc)
 
-	handler.RegisterHttpEndpoints(routerGroup, *userHandler)
+	handler.RegisterUserEndpoints(routerGroup, *userHandler)
 
 	return router
 }
