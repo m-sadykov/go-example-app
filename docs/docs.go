@@ -15,6 +15,56 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Create user session",
+                "parameters": [
+                    {
+                        "description": "login user",
+                        "name": "auth",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.LoginInputDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/handler.AccessTokenResponseDto"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout user",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/users": {
             "post": {
                 "consumes": [
@@ -34,7 +84,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.UserCreateDto"
+                            "$ref": "#/definitions/handler.UserCreateDto"
                         }
                     }
                 ],
@@ -42,7 +92,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/http.UserResponseDto"
+                            "$ref": "#/definitions/handler.UserResponseDto"
                         }
                     }
                 }
@@ -73,7 +123,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.UserResponseDto"
+                            "$ref": "#/definitions/handler.UserResponseDto"
                         }
                     }
                 }
@@ -103,7 +153,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.UserUpdateDto"
+                            "$ref": "#/definitions/handler.UserUpdateDto"
                         }
                     }
                 ],
@@ -111,7 +161,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.UserResponseDto"
+                            "$ref": "#/definitions/handler.UserResponseDto"
                         }
                     }
                 }
@@ -145,7 +195,41 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "http.UserCreateDto": {
+        "handler.AccessTokenResponseDto": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handler.LoginInputDto": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.UserCreateDto": {
             "type": "object",
             "properties": {
                 "email": {
@@ -159,7 +243,7 @@ const docTemplate = `{
                 }
             }
         },
-        "http.UserResponseDto": {
+        "handler.UserResponseDto": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -182,7 +266,7 @@ const docTemplate = `{
                 }
             }
         },
-        "http.UserUpdateDto": {
+        "handler.UserUpdateDto": {
             "type": "object",
             "properties": {
                 "email": {

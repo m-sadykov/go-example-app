@@ -1,6 +1,28 @@
 basePath: /api
 definitions:
-  http.UserCreateDto:
+  handler.AccessTokenResponseDto:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: string
+      token:
+        type: string
+      updatedAt:
+        type: string
+      userID:
+        type: integer
+    type: object
+  handler.LoginInputDto:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  handler.UserCreateDto:
     properties:
       email:
         type: string
@@ -9,7 +31,7 @@ definitions:
       password:
         type: string
     type: object
-  http.UserResponseDto:
+  handler.UserResponseDto:
     properties:
       createdAt:
         type: string
@@ -24,7 +46,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-  http.UserUpdateDto:
+  handler.UserUpdateDto:
     properties:
       email:
         type: string
@@ -39,6 +61,38 @@ info:
   title: Swagger GO Example App API
   version: "1.0"
 paths:
+  /auth:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Logout user
+      tags:
+      - auth
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: login user
+        in: body
+        name: auth
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginInputDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.AccessTokenResponseDto'
+      summary: Create user session
+      tags:
+      - auth
   /users:
     post:
       consumes:
@@ -49,14 +103,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/http.UserCreateDto'
+          $ref: '#/definitions/handler.UserCreateDto'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/http.UserResponseDto'
+            $ref: '#/definitions/handler.UserResponseDto'
       summary: Create new user
       tags:
       - users
@@ -93,7 +147,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/http.UserResponseDto'
+            $ref: '#/definitions/handler.UserResponseDto'
       summary: Get user by id
       tags:
       - users
@@ -111,14 +165,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/http.UserUpdateDto'
+          $ref: '#/definitions/handler.UserUpdateDto'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/http.UserResponseDto'
+            $ref: '#/definitions/handler.UserResponseDto'
       summary: Update user for given id
       tags:
       - users

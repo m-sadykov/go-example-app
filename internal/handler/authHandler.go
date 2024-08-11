@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
+	"github.com/m-sadykov/go-example-app/middleware"
 )
 
 type LoginInputDto struct {
@@ -34,7 +35,7 @@ func RegisterAuthEndpoints(r *gin.RouterGroup, h AuthHandler) {
 	g := r.Group("/auth")
 	{
 		g.POST("", h.Login)
-		g.DELETE(":id", h.Logout)
+		g.DELETE("", h.Logout).Use(middleware.Auth())
 	}
 }
 
@@ -44,7 +45,7 @@ func RegisterAuthEndpoints(r *gin.RouterGroup, h AuthHandler) {
 //	@Tags		auth
 //	@Accept		json
 //	@Produce	json
-//	@Param		auth	body		LoginInput	true	"login user"
+//	@Param		auth	body		LoginInputDto	true	"login user"
 //	@Success	201		{object}	AccessTokenResponseDto
 //	@Router		/auth [post]
 func (h AuthHandler) Login(ctx *gin.Context) {
