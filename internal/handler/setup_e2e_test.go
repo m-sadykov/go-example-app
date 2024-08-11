@@ -6,12 +6,16 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/m-sadykov/go-example-app/config"
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"github.com/m-sadykov/go-example-app/internal/handler"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -22,6 +26,24 @@ var (
 
 	baseUrlPrefix = "/api"
 )
+
+func TestMain(t *testing.M) {
+	var err error
+
+	gin.SetMode(gin.TestMode)
+	cfg := config.InitConfig()
+
+	db, err = gorm.Open(postgres.Open(cfg.DB_HOST), &gorm.Config{})
+	if err != nil {
+		panic(err)
+	}
+
+	userRepo = repository.NewUserRepository(db)
+	accessTokenRepo = repository.NewAccessTokenRepository(db)
+
+	code := t.Run()
+	os.Exit(code)
+}
 
 func router() *gin.Engine {
 	router := gin.Default()

@@ -3,34 +3,12 @@ package handler_test
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"testing"
 
-	"github.com/gin-gonic/gin"
-	"github.com/m-sadykov/go-example-app/config"
 	"github.com/m-sadykov/go-example-app/internal/handler"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
-
-func TestMain(t *testing.M) {
-	var err error
-
-	gin.SetMode(gin.TestMode)
-	cfg := config.InitConfig()
-
-	db, err = gorm.Open(postgres.Open(cfg.DB_HOST), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-
-	userRepo = repository.NewUserRepository(db)
-
-	code := t.Run()
-	os.Exit(code)
-}
 
 // TODO: add error case tests
 func TestCreateUser(t *testing.T) {
