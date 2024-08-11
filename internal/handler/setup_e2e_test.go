@@ -15,6 +15,7 @@ import (
 	"github.com/m-sadykov/go-example-app/internal/handler"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
+	"github.com/m-sadykov/go-example-app/internal/util"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -88,10 +89,12 @@ func clearDatabase() {
 }
 
 func createUser() (*entity.User, error) {
+	password, _ := util.HashPassword("123")
+
 	return userRepo.Store(&entity.User{
 		Name:     "John Doe",
 		Email:    "john.doe@example.com",
-		Password: "123",
+		Password: password,
 	})
 }
 

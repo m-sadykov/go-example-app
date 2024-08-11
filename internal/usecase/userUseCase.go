@@ -1,13 +1,13 @@
 package usecase
 
 import (
-	"crypto/sha1"
+	"errors"
 	"fmt"
 	"log"
 
-	"github.com/m-sadykov/go-example-app/config"
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"github.com/m-sadykov/go-example-app/internal/repository"
+	"github.com/m-sadykov/go-example-app/internal/util"
 )
 
 type UserUseCase struct {
@@ -19,10 +19,15 @@ func NewUserUseCase(r repository.UserRepository) *UserUseCase {
 }
 
 func (uc UserUseCase) Create(d entity.User) (*entity.User, error) {
+	password, err := util.HashPassword(d.Password)
+	if err != nil {
+		return nil, errors.New("failed to create password")
+	}
+
 	input := &entity.User{
 		Name:     d.Name,
 		Email:    d.Email,
-		Password: hashPassword(d.Password),
+		Password: password,
 	}
 
 	newUser, err := uc.repo.Store(input)
@@ -54,15 +59,4 @@ func (uc UserUseCase) Update(id uint, param repository.UserUpdateParam) (*entity
 
 func (uc UserUseCase) Delete(id uint) {
 	uc.repo.Delete(id)
-}
-
-func hashPassword(password string) string {
-	cfg := config.InitConfig()
-
-	pwd := sha1.New()
-	pwd.Write([]byte(password))
-	pwd.Write([]byte(cfg.SALT_ROUNDS))
-	password = fmt.Sprintf("%x", pwd.Sum(nil))
-
-	return password
 }
