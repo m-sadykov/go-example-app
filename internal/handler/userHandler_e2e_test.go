@@ -18,7 +18,7 @@ func TestCreateUser(t *testing.T) {
 		Password: "pwd",
 	}
 
-	req := makeRequest("POST", "/users", input)
+	req := makeRequest("POST", "/users", input, "")
 
 	assert.Equal(t, http.StatusCreated, req.Code)
 
@@ -28,9 +28,10 @@ func TestCreateUser(t *testing.T) {
 // FIXME: test received response values
 func TestGetUser(t *testing.T) {
 	existingUser, _ := createUser()
+	token := createAccessToken(existingUser)
 
 	url := fmt.Sprintf("/users/%d", existingUser.ID)
-	req := makeRequest("GET", url, nil)
+	req := makeRequest("GET", url, nil, token)
 
 	assert.Equal(t, http.StatusOK, req.Code)
 
@@ -43,9 +44,10 @@ func TestUpdateUser(t *testing.T) {
 	}
 
 	existingUser, _ := createUser()
-	url := fmt.Sprintf("/users/%d", existingUser.ID)
+	token := createAccessToken(existingUser)
 
-	req := makeRequest("PUT", url, input)
+	url := fmt.Sprintf("/users/%d", existingUser.ID)
+	req := makeRequest("PUT", url, input, token)
 
 	assert.Equal(t, http.StatusOK, req.Code)
 
@@ -54,13 +56,55 @@ func TestUpdateUser(t *testing.T) {
 
 func TestDeleteUser(t *testing.T) {
 	existingUser, _ := createUser()
+	token := createAccessToken(existingUser)
 
 	url := fmt.Sprintf("/users/%d", existingUser.ID)
-	req := makeRequest("DELETE", url, nil)
+	req := makeRequest("DELETE", url, nil, token)
+
 	res, _ := userRepo.Get(repository.FindOneParam{ID: existingUser.ID})
 
 	assert.Equal(t, http.StatusOK, req.Code)
 	assert.Nil(t, res)
 
 	clearDatabase()
+}
+
+func TestUnauthorizedRequests(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		Name    string
+		Method  string
+		UserID  uint
+		ErrCode int
+	}{
+		{
+			Name:    "Get user request",
+			Method:  "GET",
+			UserID:  1,
+			ErrCode: http.StatusUnauthorized,
+		},
+		{
+			Name:    "Update user request",
+			Method:  "PUT",
+			UserID:  2,
+			ErrCode: http.StatusUnauthorized,
+		},
+		{
+			Name:    "Delete user request",
+			Method:  "DELETE",
+			UserID:  3,
+			ErrCode: http.StatusUnauthorized,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			url := fmt.Sprintf("/users/%d", test.UserID)
+
+			req := makeRequest(test.Method, url, nil, "")
+
+			assert.Equal(t, test.ErrCode, req.Code)
+		})
+	}
 }

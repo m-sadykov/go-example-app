@@ -23,6 +23,7 @@ var (
 	db              *gorm.DB
 	userRepo        *repository.UserRepository
 	accessTokenRepo *repository.AccessTokenRepository
+	accessTokenUc   *usecase.AccessTokenUseCase
 
 	baseUrlPrefix = "/api"
 )
@@ -40,6 +41,7 @@ func TestMain(t *testing.M) {
 
 	userRepo = repository.NewUserRepository(db)
 	accessTokenRepo = repository.NewAccessTokenRepository(db)
+	accessTokenUc = usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
 	code := t.Run()
 	os.Exit(code)
@@ -62,7 +64,7 @@ func router() *gin.Engine {
 	return router
 }
 
-func makeRequest(method, url string, body interface{}) *httptest.ResponseRecorder {
+func makeRequest(method, url string, body interface{}, accessToken string) *httptest.ResponseRecorder {
 	requestBody, _ := json.Marshal(body)
 
 	req, err := http.NewRequest(method, baseUrlPrefix+url, bytes.NewBuffer(requestBody))
@@ -70,9 +72,12 @@ func makeRequest(method, url string, body interface{}) *httptest.ResponseRecorde
 		log.Println(err)
 	}
 
-	req.Header.Add("Content-Type", "application/json")
-	recorder := httptest.NewRecorder()
+	req.Header.Set("Content-Type", "application/json")
+	if accessToken != "" {
+		req.Header.Set("Authorization", "Bearer "+accessToken)
+	}
 
+	recorder := httptest.NewRecorder()
 	router().ServeHTTP(recorder, req)
 
 	return recorder
@@ -88,4 +93,10 @@ func createUser() (*entity.User, error) {
 		Email:    "john.doe@example.com",
 		Password: "123",
 	})
+}
+
+func createAccessToken(user *entity.User) string {
+	t, _ := accessTokenUc.CreateAccessToken(user)
+
+	return t.Token
 }

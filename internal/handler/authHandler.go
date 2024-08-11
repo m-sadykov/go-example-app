@@ -35,7 +35,7 @@ func RegisterAuthEndpoints(r *gin.RouterGroup, h AuthHandler) {
 	g := r.Group("/auth")
 	{
 		g.POST("", h.Login)
-		g.DELETE("", h.Logout).Use(middleware.Auth())
+		g.DELETE("", middleware.Auth(), h.Logout)
 	}
 }
 

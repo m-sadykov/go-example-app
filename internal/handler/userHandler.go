@@ -48,13 +48,14 @@ type UserHandler struct {
 	useCase usecase.UserUseCase
 }
 
-func RegisterUserEndpoints(router *gin.RouterGroup, c UserHandler) {
-	g := router.Group("/users").Use(middleware.Auth())
+func RegisterUserEndpoints(router *gin.RouterGroup, h UserHandler) {
+	g := router.Group("/users")
 	{
-		g.POST("", c.AddUser)
-		g.GET(":id", c.GetById)
-		g.PUT(":id", c.UpdateUser)
-		g.DELETE(":id", c.Delete)
+		g.POST("", h.AddUser)
+
+		g.GET(":id", middleware.Auth(), h.GetById)
+		g.PUT(":id", middleware.Auth(), h.UpdateUser)
+		g.DELETE(":id", middleware.Auth(), h.Delete)
 	}
 }
 
