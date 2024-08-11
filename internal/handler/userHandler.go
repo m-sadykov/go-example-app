@@ -9,6 +9,7 @@ import (
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
+	"github.com/m-sadykov/go-example-app/middleware"
 )
 
 type UserResponseDto struct {
@@ -47,13 +48,14 @@ type UserHandler struct {
 	useCase usecase.UserUseCase
 }
 
-func RegisterHttpEndpoints(router *gin.RouterGroup, c UserHandler) {
-	userEndpoints := router.Group("/users")
+func RegisterUserEndpoints(router *gin.RouterGroup, h UserHandler) {
+	g := router.Group("/users")
 	{
-		userEndpoints.POST("", c.AddUser)
-		userEndpoints.GET(":id", c.GetById)
-		userEndpoints.PUT(":id", c.UpdateUser)
-		userEndpoints.DELETE(":id", c.Delete)
+		g.POST("", h.AddUser)
+
+		g.GET(":id", middleware.Auth(), h.GetById)
+		g.PUT(":id", middleware.Auth(), h.UpdateUser)
+		g.DELETE(":id", middleware.Auth(), h.Delete)
 	}
 }
 
@@ -70,13 +72,13 @@ func NewUserHandler(uc usecase.UserUseCase) *UserHandler {
 //	@Param		user	body		UserCreateDto	true	"create user"
 //	@Success	201		{object}	UserResponseDto
 //	@Router		/users [post]
-func (c UserHandler) AddUser(ctx *gin.Context) {
+func (h UserHandler) AddUser(ctx *gin.Context) {
 	var data entity.User
 	if err := ctx.ShouldBindJSON(&data); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	u, err := c.useCase.Create(data)
+	u, err := h.useCase.Create(data)
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 	}
@@ -93,10 +95,10 @@ func (c UserHandler) AddUser(ctx *gin.Context) {
 //	@Param		id	path		uint	true	"User ID"
 //	@Success	200	{object}	UserResponseDto
 //	@Router		/users/{id} [get]
-func (c UserHandler) GetById(ctx *gin.Context) {
+func (h UserHandler) GetById(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
-	u, err := c.useCase.GetOneById(uint(id))
+	u, err := h.useCase.GetOneById(uint(id))
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 	}
@@ -114,7 +116,7 @@ func (c UserHandler) GetById(ctx *gin.Context) {
 //	@Param		user	body		UserUpdateDto	true	"update user"
 //	@Success	200		{object}	UserResponseDto
 //	@Router		/users/{id} [put]
-func (c UserHandler) UpdateUser(ctx *gin.Context) {
+func (h UserHandler) UpdateUser(ctx *gin.Context) {
 	var input repository.UserUpdateParam
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
@@ -122,7 +124,7 @@ func (c UserHandler) UpdateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	u, err := c.useCase.Update(uint(id), input)
+	u, err := h.useCase.Update(uint(id), input)
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 	}
@@ -139,10 +141,10 @@ func (c UserHandler) UpdateUser(ctx *gin.Context) {
 //	@Param		id	path	uint	true	"User ID"
 //	@Success	200
 //	@Router		/users/{id} [delete]
-func (c UserHandler) Delete(ctx *gin.Context) {
+func (h UserHandler) Delete(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
-	c.useCase.Delete(uint(id))
+	h.useCase.Delete(uint(id))
 
 	ctx.JSON(http.StatusOK, gin.H{"data": nil})
 }

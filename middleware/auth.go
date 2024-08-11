@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,9 @@ import (
 
 func Auth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("authorization")
+		authorization := ctx.GetHeader("authorization")
+		token := strings.TrimSpace(strings.Replace(authorization, "Bearer", "", 1))
+
 		if token == "" {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			ctx.Abort()

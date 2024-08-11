@@ -18,6 +18,7 @@ import (
 type App struct {
 	httpServer  *http.Server
 	userHandler *handler.UserHandler
+	authHandler *handler.AuthHandler
 }
 
 func NewApp(cfg config.Config) *App {
@@ -28,10 +29,15 @@ func NewApp(cfg config.Config) *App {
 	}
 
 	userRepo := repository.NewUserRepository(db)
+	accessTokenRepo := repository.NewAccessTokenRepository(db)
+
+	accessTokenUseCase := usecase.NewAccessTokenUseCase(*accessTokenRepo)
 	userUseCase := usecase.NewUserUseCase(*userRepo)
+	authUseCase := usecase.NewAuthUseCase(*userRepo, *accessTokenUseCase)
 
 	return &App{
 		userHandler: handler.NewUserHandler(*userUseCase),
+		authHandler: handler.NewAuthHandler(*authUseCase),
 	}
 }
 
@@ -59,7 +65,8 @@ func setupRoutes(app *App) *gin.Engine {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	routerGroup := router.Group("/api")
-	handler.RegisterHttpEndpoints(routerGroup, *app.userHandler)
+	handler.RegisterUserEndpoints(routerGroup, *app.userHandler)
+	handler.RegisterAuthEndpoints(routerGroup, *app.authHandler)
 
 	return router
 }

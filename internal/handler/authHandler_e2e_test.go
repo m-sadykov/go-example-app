@@ -1,0 +1,59 @@
+package handler_test
+
+import (
+	"net/http"
+	"testing"
+
+	"github.com/m-sadykov/go-example-app/internal/handler"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestLogin(t *testing.T) {
+	user, _ := createUser()
+
+	input := handler.LoginInputDto{
+		Email:    user.Email,
+		Password: "123",
+	}
+
+	req := makeRequest("POST", "/auth", input, "")
+
+	assert.Equal(t, http.StatusCreated, req.Code)
+
+	clearDatabase()
+}
+
+func TestLogout(t *testing.T) {
+	t.Parallel()
+
+	existingUser, _ := createUser()
+	token := createAccessToken(existingUser)
+
+	tests := []struct {
+		Name       string
+		StatusCode int
+		UserID     uint
+		Token      string
+	}{
+		{
+			Name:       "Success logout",
+			StatusCode: http.StatusOK,
+			Token:      token,
+		},
+		{
+			Name:       "Unauthorized",
+			StatusCode: http.StatusUnauthorized,
+			Token:      "invalidToken",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			req := makeRequest("DELETE", "/auth", nil, test.Token)
+
+			assert.Equal(t, test.StatusCode, req.Code)
+		})
+	}
+
+	clearDatabase()
+}

@@ -1,7 +1,6 @@
 package usecase_test
 
 import (
-	"os"
 	"testing"
 
 	"github.com/m-sadykov/go-example-app/config"
@@ -37,11 +36,8 @@ func TestMain(t *testing.M) {
 	userUc = usecase.NewUserUseCase(*userRepo)
 	accessTokenUc = *usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
-	code := t.Run()
-
 	// TODO: clear test data after each test
 	// close database connection
-	os.Exit(code)
 }
 
 func createUser() (*entity.User, error) {

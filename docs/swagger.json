@@ -8,6 +8,56 @@
     "host": "localhost:3000",
     "basePath": "/api",
     "paths": {
+        "/auth": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Create user session",
+                "parameters": [
+                    {
+                        "description": "login user",
+                        "name": "auth",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.LoginInputDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/handler.AccessTokenResponseDto"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout user",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/users": {
             "post": {
                 "consumes": [
@@ -27,7 +77,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.UserCreateDto"
+                            "$ref": "#/definitions/handler.UserCreateDto"
                         }
                     }
                 ],
@@ -35,7 +85,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/http.UserResponseDto"
+                            "$ref": "#/definitions/handler.UserResponseDto"
                         }
                     }
                 }
@@ -66,7 +116,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.UserResponseDto"
+                            "$ref": "#/definitions/handler.UserResponseDto"
                         }
                     }
                 }
@@ -96,7 +146,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.UserUpdateDto"
+                            "$ref": "#/definitions/handler.UserUpdateDto"
                         }
                     }
                 ],
@@ -104,7 +154,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.UserResponseDto"
+                            "$ref": "#/definitions/handler.UserResponseDto"
                         }
                     }
                 }
@@ -138,7 +188,41 @@
         }
     },
     "definitions": {
-        "http.UserCreateDto": {
+        "handler.AccessTokenResponseDto": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handler.LoginInputDto": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.UserCreateDto": {
             "type": "object",
             "properties": {
                 "email": {
@@ -152,7 +236,7 @@
                 }
             }
         },
-        "http.UserResponseDto": {
+        "handler.UserResponseDto": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -175,7 +259,7 @@
                 }
             }
         },
-        "http.UserUpdateDto": {
+        "handler.UserUpdateDto": {
             "type": "object",
             "properties": {
                 "email": {
