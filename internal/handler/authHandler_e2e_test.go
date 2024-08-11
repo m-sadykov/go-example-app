@@ -52,8 +52,8 @@ func TestLogout(t *testing.T) {
 			req := makeRequest("DELETE", "/auth", nil, test.Token)
 
 			assert.Equal(t, test.StatusCode, req.Code)
-
-			clearDatabase()
 		})
 	}
+
+	clearDatabase()
 }
