@@ -36,7 +36,7 @@ func TestMain(t *testing.M) {
 	userUc = usecase.NewUserUseCase(*userRepo)
 	accessTokenUc = *usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
-	// t.Run()
+	t.Run()
 
 	// TODO: clear test data after each test
 	// close database connection
