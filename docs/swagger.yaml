@@ -58,7 +58,7 @@ definitions:
 host: localhost:3000
 info:
   contact: {}
-  title: Swagger GO Example App API
+  title: Swagger Example App API
   version: "1.0"
 paths:
   /auth:
@@ -70,6 +70,8 @@ paths:
       responses:
         "200":
           description: OK
+      security:
+      - BearerAuth: []
       summary: Logout user
       tags:
       - auth
@@ -129,6 +131,8 @@ paths:
       responses:
         "200":
           description: OK
+      security:
+      - BearerAuth: []
       summary: Delete user by given id
       tags:
       - users
@@ -148,6 +152,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/handler.UserResponseDto'
+      security:
+      - BearerAuth: []
       summary: Get user by id
       tags:
       - users
@@ -173,7 +179,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/handler.UserResponseDto'
+      security:
+      - BearerAuth: []
       summary: Update user for given id
       tags:
       - users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

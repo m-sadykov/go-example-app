@@ -38,6 +38,7 @@ func TestMain(t *testing.M) {
 
 	// TODO: clear test data after each test
 	// close database connection
+	t.Run()
 }
 
 func createUser() (*entity.User, error) {
@@ -46,9 +47,4 @@ func createUser() (*entity.User, error) {
 		Email:    "john.doe@example.com",
 		Password: "123",
 	})
-}
-
-func clearDatabase() {
-	db.Exec("delete from public.users")
-	db.Exec("delete from public.access_tokens")
 }

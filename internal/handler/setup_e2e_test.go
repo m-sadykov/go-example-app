@@ -24,9 +24,9 @@ var (
 	userRepo        *repository.UserRepository
 	accessTokenRepo *repository.AccessTokenRepository
 	accessTokenUc   *usecase.AccessTokenUseCase
-
-	baseUrlPrefix = "/api"
 )
+
+const baseUrlPrefix = "/api"
 
 func TestMain(t *testing.M) {
 	var err error

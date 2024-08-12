@@ -95,6 +95,7 @@ func (h UserHandler) AddUser(ctx *gin.Context) {
 //	@Param		id	path		uint	true	"User ID"
 //	@Success	200	{object}	UserResponseDto
 //	@Router		/users/{id} [get]
+//	@Security BearerAuth
 func (h UserHandler) GetById(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
@@ -103,7 +104,11 @@ func (h UserHandler) GetById(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": SanitizeUser(*u)})
+	if u != nil {
+		ctx.JSON(http.StatusOK, gin.H{"data": SanitizeUser(*u)})
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": nil})
 }
 
 // UpdateUser godoc
@@ -116,6 +121,7 @@ func (h UserHandler) GetById(ctx *gin.Context) {
 //	@Param		user	body		UserUpdateDto	true	"update user"
 //	@Success	200		{object}	UserResponseDto
 //	@Router		/users/{id} [put]
+//	@Security BearerAuth
 func (h UserHandler) UpdateUser(ctx *gin.Context) {
 	var input repository.UserUpdateParam
 	id, _ := strconv.Atoi(ctx.Param("id"))
@@ -141,6 +147,7 @@ func (h UserHandler) UpdateUser(ctx *gin.Context) {
 //	@Param		id	path	uint	true	"User ID"
 //	@Success	200
 //	@Router		/users/{id} [delete]
+//	@Security BearerAuth
 func (h UserHandler) Delete(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 

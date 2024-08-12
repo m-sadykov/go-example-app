@@ -48,6 +48,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -100,6 +105,11 @@ const docTemplate = `{
         },
         "/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -129,6 +139,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -167,6 +182,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -280,6 +300,13 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
@@ -289,7 +316,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:3000",
 	BasePath:         "/api",
 	Schemes:          []string{},
-	Title:            "Swagger GO Example App API",
+	Title:            "Swagger Example App API",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

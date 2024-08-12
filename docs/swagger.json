@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Swagger GO Example App API",
+        "title": "Swagger Example App API",
         "contact": {},
         "version": "1.0"
     },
@@ -41,6 +41,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -93,6 +98,11 @@
         },
         "/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -122,6 +132,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -160,6 +175,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -272,6 +292,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

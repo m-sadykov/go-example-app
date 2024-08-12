@@ -2,6 +2,7 @@ package util
 
 import (
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func HashPassword(password string) (string, error) {
@@ -13,4 +14,9 @@ func HashPassword(password string) (string, error) {
 	}
 
 	return string(hashedPassword), nil
+}
+
+func ClearDatabase(db *gorm.DB) {
+	db.Exec("delete from public.users")
+	db.Exec("delete from public.access_tokens")
 }

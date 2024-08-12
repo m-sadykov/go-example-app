@@ -6,10 +6,13 @@ import (
 	"github.com/m-sadykov/go-example-app/internal/app"
 )
 
-// @title		Swagger GO Example App API
-// @version	1.0
-// @host		localhost:3000
-// @BasePath	/api
+// @title						Swagger Example App API
+// @version					1.0
+// @host						localhost:3000
+// @BasePath					/api
+// @securityDefinitions.apikey	BearerAuth
+// @in							header
+// @name						Authorization
 func main() {
 	cfg := config.InitConfig()
 
