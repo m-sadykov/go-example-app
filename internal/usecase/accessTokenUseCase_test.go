@@ -8,7 +8,7 @@ import (
 )
 
 func TestCreateAccessToken(t *testing.T) {
-	user, _ := createUser()
+	user, _ := util.CreateUser(*userRepo)
 
 	token, _ := accessTokenUc.CreateAccessToken(user)
 

@@ -28,7 +28,7 @@ func TestCreateUserRequest(t *testing.T) {
 
 // FIXME: test received response values
 func TestGetUserRequest(t *testing.T) {
-	existingUser, _ := createUser()
+	existingUser, _ := util.CreateUser(*userRepo)
 	token := createAccessToken(existingUser)
 
 	url := fmt.Sprintf("/users/%d", existingUser.ID)
@@ -44,7 +44,7 @@ func TestUpdateUserRequest(t *testing.T) {
 		Name: "Alex",
 	}
 
-	existingUser, _ := createUser()
+	existingUser, _ := util.CreateUser(*userRepo)
 	token := createAccessToken(existingUser)
 
 	url := fmt.Sprintf("/users/%d", existingUser.ID)
@@ -56,7 +56,7 @@ func TestUpdateUserRequest(t *testing.T) {
 }
 
 func TestDeleteUserRequest(t *testing.T) {
-	existingUser, _ := createUser()
+	existingUser, _ := util.CreateUser(*userRepo)
 	token := createAccessToken(existingUser)
 
 	url := fmt.Sprintf("/users/%d", existingUser.ID)

@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/m-sadykov/go-example-app/config"
-	"github.com/m-sadykov/go-example-app/internal/entity"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
 	"github.com/m-sadykov/go-example-app/internal/util"
@@ -44,12 +43,4 @@ func TestMain(t *testing.M) {
 	util.ClearDatabase(db)
 
 	os.Exit(code)
-}
-
-func createUser() (*entity.User, error) {
-	return userRepo.Store(&entity.User{
-		Name:     "John Doe",
-		Email:    "john.doe@example.com",
-		Password: "123",
-	})
 }

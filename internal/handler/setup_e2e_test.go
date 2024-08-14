@@ -86,16 +86,6 @@ func makeRequest(method, url string, body interface{}, accessToken string) *http
 	return recorder
 }
 
-func createUser() (*entity.User, error) {
-	password, _ := util.HashPassword("123")
-
-	return userRepo.Store(&entity.User{
-		Name:     "John Doe",
-		Email:    "john.doe@example.com",
-		Password: password,
-	})
-}
-
 func createAccessToken(user *entity.User) string {
 	t, _ := accessTokenUc.CreateAccessToken(user)
 
