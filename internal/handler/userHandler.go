@@ -73,7 +73,7 @@ func NewUserHandler(uc usecase.UserUseCase) *UserHandler {
 //	@Success	201		{object}	UserResponseDto
 //	@Router		/users [post]
 func (h UserHandler) AddUser(ctx *gin.Context) {
-	var data entity.User
+	var data *entity.User
 	if err := ctx.ShouldBindJSON(&data); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}

@@ -11,7 +11,7 @@ import (
 )
 
 func TestCreateUser(t *testing.T) {
-	input := entity.User{
+	input := &entity.User{
 		Name:     "John Doe",
 		Email:    "john.doe@example.com",
 		Password: "123",
@@ -28,7 +28,7 @@ func TestCreateUser(t *testing.T) {
 func TestCreateUserWithUniqueEmail(t *testing.T) {
 	existingUser, _ := util.CreateUser(*userRepo)
 
-	input := entity.User{
+	input := &entity.User{
 		Name:     "Jock Wick",
 		Email:    existingUser.Email,
 		Password: "12345",
