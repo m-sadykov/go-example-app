@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/m-sadykov/go-example-app/internal/handler"
+	"github.com/m-sadykov/go-example-app/internal/util"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +21,7 @@ func TestLogin(t *testing.T) {
 
 	assert.Equal(t, http.StatusCreated, req.Code)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestLogout(t *testing.T) {
@@ -55,5 +56,5 @@ func TestLogout(t *testing.T) {
 		})
 	}
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
