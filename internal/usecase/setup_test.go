@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/m-sadykov/go-example-app/config"
@@ -38,7 +39,9 @@ func TestMain(t *testing.M) {
 
 	// TODO: clear test data after each test
 	// close database connection
-	t.Run()
+	code := t.Run()
+
+	os.Exit(code)
 }
 
 func createUser() (*entity.User, error) {
