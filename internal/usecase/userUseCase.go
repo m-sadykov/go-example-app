@@ -31,8 +31,9 @@ func (uc UserUseCase) Create(d entity.User) (*entity.User, error) {
 	}
 
 	newUser, err := uc.repo.Store(input)
+	log.Println("created user:", newUser)
+	log.Println("got error:", err)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 

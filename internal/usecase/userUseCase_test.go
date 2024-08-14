@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"log"
 	"testing"
 
 	"github.com/m-sadykov/go-example-app/internal/entity"
@@ -35,6 +36,7 @@ func TestCreateUserWithUniqueEmail(t *testing.T) {
 	}
 
 	_, err := userUc.Create(input)
+	log.Println("expected err:", err)
 
 	assert.ErrorContainsf(t, err, "unique constraint", "formatted")
 	assert.Error(t, gorm.ErrDuplicatedKey, err)
