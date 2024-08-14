@@ -18,7 +18,7 @@ func NewUserUseCase(r repository.UserRepository) *UserUseCase {
 	return &UserUseCase{repo: r}
 }
 
-func (uc UserUseCase) Create(d *entity.User) (*entity.User, error) {
+func (uc UserUseCase) Create(d entity.User) (*entity.User, error) {
 	password, err := util.HashPassword(d.Password)
 	if err != nil {
 		return nil, errors.New("failed to create password")
