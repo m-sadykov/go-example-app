@@ -8,6 +8,7 @@ import (
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
+	"github.com/m-sadykov/go-example-app/internal/util"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -40,6 +41,7 @@ func TestMain(t *testing.M) {
 	// TODO: clear test data after each test
 	// close database connection
 	code := t.Run()
+	util.ClearDatabase(db)
 
 	os.Exit(code)
 }
