@@ -12,7 +12,7 @@ import (
 )
 
 // TODO: add error case tests
-func TestCreateUser(t *testing.T) {
+func TestCreateUserRequest(t *testing.T) {
 	input := handler.UserCreateDto{
 		Name:     "John Doe",
 		Email:    "john.doe@test.com",
@@ -27,7 +27,7 @@ func TestCreateUser(t *testing.T) {
 }
 
 // FIXME: test received response values
-func TestGetUser(t *testing.T) {
+func TestGetUserRequest(t *testing.T) {
 	existingUser, _ := createUser()
 	token := createAccessToken(existingUser)
 
@@ -39,7 +39,7 @@ func TestGetUser(t *testing.T) {
 	util.ClearDatabase(db)
 }
 
-func TestUpdateUser(t *testing.T) {
+func TestUpdateUserRequest(t *testing.T) {
 	input := repository.UserUpdateParam{
 		Name: "Alex",
 	}
@@ -55,7 +55,7 @@ func TestUpdateUser(t *testing.T) {
 	util.ClearDatabase(db)
 }
 
-func TestDeleteUser(t *testing.T) {
+func TestDeleteUserRequest(t *testing.T) {
 	existingUser, _ := createUser()
 	token := createAccessToken(existingUser)
 
