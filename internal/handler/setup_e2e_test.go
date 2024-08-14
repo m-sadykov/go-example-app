@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -44,9 +43,7 @@ func TestMain(t *testing.M) {
 	accessTokenRepo = repository.NewAccessTokenRepository(db)
 	accessTokenUc = usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
-	code := t.Run()
-
-	os.Exit(code)
+	t.Run()
 }
 
 func router() *gin.Engine {
