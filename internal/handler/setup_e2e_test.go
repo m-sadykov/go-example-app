@@ -24,9 +24,9 @@ var (
 	userRepo        *repository.UserRepository
 	accessTokenRepo *repository.AccessTokenRepository
 	accessTokenUc   *usecase.AccessTokenUseCase
-
-	baseUrlPrefix = "/api"
 )
+
+const baseUrlPrefix = "/api"
 
 func TestMain(t *testing.M) {
 	var err error
@@ -44,9 +44,6 @@ func TestMain(t *testing.M) {
 	accessTokenUc = usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
 	t.Run()
-
-	clearDatabase()
-
 }
 
 func router() *gin.Engine {
@@ -83,10 +80,6 @@ func makeRequest(method, url string, body interface{}, accessToken string) *http
 	router().ServeHTTP(recorder, req)
 
 	return recorder
-}
-
-func clearDatabase() {
-	db.Exec("delete from public.users")
 }
 
 func createUser() (*entity.User, error) {

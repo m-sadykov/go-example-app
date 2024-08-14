@@ -70,6 +70,7 @@ func (h AuthHandler) Login(ctx *gin.Context) {
 //	@Produce	json
 //	@Success	200
 //	@Router		/auth [delete]
+//	@Security BearerAuth
 func (h AuthHandler) Logout(ctx *gin.Context) {
 	token := ctx.GetHeader("authorization")
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/m-sadykov/go-example-app/internal/entity"
 	"github.com/m-sadykov/go-example-app/internal/repository"
+	"github.com/m-sadykov/go-example-app/internal/util"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 )
@@ -21,7 +22,7 @@ func TestCreateUser(t *testing.T) {
 	assert.Equal(t, input.Name, res.Name)
 	assert.Equal(t, input.Email, res.Email)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestCreateUserWithUniqueEmail(t *testing.T) {
@@ -38,7 +39,7 @@ func TestCreateUserWithUniqueEmail(t *testing.T) {
 	assert.ErrorContainsf(t, err, "unique constraint", "formatted")
 	assert.Error(t, gorm.ErrDuplicatedKey, err)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestGetOneById(t *testing.T) {
@@ -48,7 +49,7 @@ func TestGetOneById(t *testing.T) {
 
 	assert.Equal(t, existingUser.ID, res.ID)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestNotFoundById(t *testing.T) {
@@ -58,7 +59,7 @@ func TestNotFoundById(t *testing.T) {
 
 	assert.Nil(t, res)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestUpdateUser(t *testing.T) {
@@ -69,7 +70,7 @@ func TestUpdateUser(t *testing.T) {
 
 	assert.Equal(t, expectedEmail, res.Email)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestFailUpdateUser(t *testing.T) {
@@ -79,7 +80,7 @@ func TestFailUpdateUser(t *testing.T) {
 
 	assert.ErrorContainsf(t, err, "not found", "formatted")
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestDeleteUser(t *testing.T) {
@@ -90,5 +91,5 @@ func TestDeleteUser(t *testing.T) {
 
 	assert.Nil(t, res)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }

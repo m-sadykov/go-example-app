@@ -7,6 +7,7 @@ import (
 
 	"github.com/m-sadykov/go-example-app/internal/handler"
 	"github.com/m-sadykov/go-example-app/internal/repository"
+	"github.com/m-sadykov/go-example-app/internal/util"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,7 +23,7 @@ func TestCreateUser(t *testing.T) {
 
 	assert.Equal(t, http.StatusCreated, req.Code)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 // FIXME: test received response values
@@ -35,7 +36,7 @@ func TestGetUser(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, req.Code)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestUpdateUser(t *testing.T) {
@@ -51,7 +52,7 @@ func TestUpdateUser(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, req.Code)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestDeleteUser(t *testing.T) {
@@ -66,7 +67,7 @@ func TestDeleteUser(t *testing.T) {
 	assert.Equal(t, http.StatusOK, req.Code)
 	assert.Nil(t, res)
 
-	clearDatabase()
+	util.ClearDatabase(db)
 }
 
 func TestUnauthorizedRequests(t *testing.T) {
