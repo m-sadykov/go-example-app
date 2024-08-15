@@ -1,7 +1,6 @@
 package usecase_test
 
 import (
-	"log"
 	"testing"
 
 	"github.com/m-sadykov/go-example-app/internal/entity"
@@ -23,7 +22,7 @@ func TestCreateUser(t *testing.T) {
 	assert.Equal(t, input.Name, res.Name)
 	assert.Equal(t, input.Email, res.Email)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 func TestCreateUserWithUniqueEmail(t *testing.T) {
@@ -34,17 +33,13 @@ func TestCreateUserWithUniqueEmail(t *testing.T) {
 		Email:    existingUser.Email,
 		Password: "12345",
 	}
-	log.Println("existingUser", existingUser)
-	log.Println("input", input)
 
-	u, err := userUc.Create(input)
-	log.Println("created user:", u)
-	log.Println("expected err:", err)
+	_, err := userUc.Create(input)
 
 	assert.ErrorContainsf(t, err, "unique constraint", "formatted")
 	assert.Error(t, gorm.ErrDuplicatedKey, err)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 func TestGetOneById(t *testing.T) {
@@ -54,7 +49,7 @@ func TestGetOneById(t *testing.T) {
 
 	assert.Equal(t, existingUser.ID, res.ID)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 func TestNotFoundById(t *testing.T) {
@@ -64,7 +59,7 @@ func TestNotFoundById(t *testing.T) {
 
 	assert.Nil(t, res)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 func TestUpdateUser(t *testing.T) {
@@ -75,7 +70,7 @@ func TestUpdateUser(t *testing.T) {
 
 	assert.Equal(t, expectedEmail, res.Email)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 func TestFailUpdateUser(t *testing.T) {
@@ -85,7 +80,7 @@ func TestFailUpdateUser(t *testing.T) {
 
 	assert.ErrorContainsf(t, err, "not found", "formatted")
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 func TestDeleteUser(t *testing.T) {
@@ -96,5 +91,5 @@ func TestDeleteUser(t *testing.T) {
 
 	assert.Nil(t, res)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }

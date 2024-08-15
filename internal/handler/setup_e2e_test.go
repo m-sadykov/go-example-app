@@ -15,7 +15,6 @@ import (
 	"github.com/m-sadykov/go-example-app/internal/handler"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
-	"github.com/m-sadykov/go-example-app/internal/util"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -45,7 +44,6 @@ func TestMain(t *testing.M) {
 	accessTokenUc = usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
 	code := t.Run()
-	defer util.ClearDatabase(db)
 
 	os.Exit(code)
 }

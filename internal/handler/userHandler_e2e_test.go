@@ -23,7 +23,7 @@ func TestCreateUserRequest(t *testing.T) {
 
 	assert.Equal(t, http.StatusCreated, req.Code)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 // FIXME: test received response values
@@ -36,7 +36,7 @@ func TestGetUserRequest(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, req.Code)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 func TestUpdateUserRequest(t *testing.T) {
@@ -52,7 +52,7 @@ func TestUpdateUserRequest(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, req.Code)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 func TestDeleteUserRequest(t *testing.T) {
@@ -67,7 +67,7 @@ func TestDeleteUserRequest(t *testing.T) {
 	assert.Equal(t, http.StatusOK, req.Code)
 	assert.Nil(t, res)
 
-	defer util.ClearDatabase(db)
+	util.ClearDatabase(db)
 }
 
 func TestUnauthorizedRequests(t *testing.T) {

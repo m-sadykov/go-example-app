@@ -4,10 +4,10 @@ import (
 	"os"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/m-sadykov/go-example-app/config"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
-	"github.com/m-sadykov/go-example-app/internal/util"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -24,6 +24,7 @@ var (
 )
 
 func TestMain(t *testing.M) {
+	gin.SetMode(gin.TestMode)
 	cfg := config.InitConfig()
 
 	db, err = gorm.Open(postgres.Open(cfg.DB_HOST), &gorm.Config{})
@@ -37,10 +38,7 @@ func TestMain(t *testing.M) {
 	userUc = usecase.NewUserUseCase(*userRepo)
 	accessTokenUc = *usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
-	// TODO: clear test data after each test
-	// close database connection
 	code := t.Run()
-	defer util.ClearDatabase(db)
 
 	os.Exit(code)
 }
