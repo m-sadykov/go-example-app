@@ -35,7 +35,8 @@ func TestCreateUserWithUniqueEmail(t *testing.T) {
 		Password: "12345",
 	}
 
-	_, err := userUc.Create(input)
+	u, err := userUc.Create(input)
+	log.Println("created user:", u)
 	log.Println("expected err:", err)
 
 	assert.ErrorContainsf(t, err, "unique constraint", "formatted")
