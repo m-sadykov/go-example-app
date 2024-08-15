@@ -34,7 +34,8 @@ func TestCreateUserWithUniqueEmail(t *testing.T) {
 		Email:    existingUser.Email,
 		Password: "12345",
 	}
-	log.Println(input)
+	log.Println("existingUser", existingUser)
+	log.Println("input", input)
 
 	u, err := userUc.Create(input)
 	log.Println("created user:", u)
