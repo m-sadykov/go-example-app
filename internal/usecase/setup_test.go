@@ -1,10 +1,11 @@
 package usecase_test
 
 import (
+	"os"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/m-sadykov/go-example-app/config"
-	"github.com/m-sadykov/go-example-app/internal/entity"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
 	"gorm.io/driver/postgres"
@@ -23,6 +24,7 @@ var (
 )
 
 func TestMain(t *testing.M) {
+	gin.SetMode(gin.TestMode)
 	cfg := config.InitConfig()
 
 	db, err = gorm.Open(postgres.Open(cfg.DB_HOST), &gorm.Config{})
@@ -36,15 +38,7 @@ func TestMain(t *testing.M) {
 	userUc = usecase.NewUserUseCase(*userRepo)
 	accessTokenUc = *usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
-	// TODO: clear test data after each test
-	// close database connection
-	t.Run()
-}
+	code := t.Run()
 
-func createUser() (*entity.User, error) {
-	return userRepo.Store(&entity.User{
-		Name:     "John Doe",
-		Email:    "john.doe@example.com",
-		Password: "123",
-	})
+	os.Exit(code)
 }

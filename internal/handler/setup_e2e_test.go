@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,6 @@ import (
 	"github.com/m-sadykov/go-example-app/internal/handler"
 	"github.com/m-sadykov/go-example-app/internal/repository"
 	"github.com/m-sadykov/go-example-app/internal/usecase"
-	"github.com/m-sadykov/go-example-app/internal/util"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -43,7 +43,9 @@ func TestMain(t *testing.M) {
 	accessTokenRepo = repository.NewAccessTokenRepository(db)
 	accessTokenUc = usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
-	t.Run()
+	code := t.Run()
+
+	os.Exit(code)
 }
 
 func router() *gin.Engine {
@@ -80,16 +82,6 @@ func makeRequest(method, url string, body interface{}, accessToken string) *http
 	router().ServeHTTP(recorder, req)
 
 	return recorder
-}
-
-func createUser() (*entity.User, error) {
-	password, _ := util.HashPassword("123")
-
-	return userRepo.Store(&entity.User{
-		Name:     "John Doe",
-		Email:    "john.doe@example.com",
-		Password: password,
-	})
 }
 
 func createAccessToken(user *entity.User) string {

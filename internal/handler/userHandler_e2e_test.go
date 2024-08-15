@@ -12,7 +12,7 @@ import (
 )
 
 // TODO: add error case tests
-func TestCreateUser(t *testing.T) {
+func TestCreateUserRequest(t *testing.T) {
 	input := handler.UserCreateDto{
 		Name:     "John Doe",
 		Email:    "john.doe@test.com",
@@ -27,8 +27,8 @@ func TestCreateUser(t *testing.T) {
 }
 
 // FIXME: test received response values
-func TestGetUser(t *testing.T) {
-	existingUser, _ := createUser()
+func TestGetUserRequest(t *testing.T) {
+	existingUser, _ := util.CreateUser(*userRepo)
 	token := createAccessToken(existingUser)
 
 	url := fmt.Sprintf("/users/%d", existingUser.ID)
@@ -39,12 +39,12 @@ func TestGetUser(t *testing.T) {
 	util.ClearDatabase(db)
 }
 
-func TestUpdateUser(t *testing.T) {
+func TestUpdateUserRequest(t *testing.T) {
 	input := repository.UserUpdateParam{
 		Name: "Alex",
 	}
 
-	existingUser, _ := createUser()
+	existingUser, _ := util.CreateUser(*userRepo)
 	token := createAccessToken(existingUser)
 
 	url := fmt.Sprintf("/users/%d", existingUser.ID)
@@ -55,8 +55,8 @@ func TestUpdateUser(t *testing.T) {
 	util.ClearDatabase(db)
 }
 
-func TestDeleteUser(t *testing.T) {
-	existingUser, _ := createUser()
+func TestDeleteUserRequest(t *testing.T) {
+	existingUser, _ := util.CreateUser(*userRepo)
 	token := createAccessToken(existingUser)
 
 	url := fmt.Sprintf("/users/%d", existingUser.ID)

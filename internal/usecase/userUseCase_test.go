@@ -26,7 +26,7 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestCreateUserWithUniqueEmail(t *testing.T) {
-	existingUser, _ := createUser()
+	existingUser, _ := util.CreateUser(*userRepo)
 
 	input := entity.User{
 		Name:     "Jock Wick",
@@ -43,7 +43,7 @@ func TestCreateUserWithUniqueEmail(t *testing.T) {
 }
 
 func TestGetOneById(t *testing.T) {
-	existingUser, _ := createUser()
+	existingUser, _ := util.CreateUser(*userRepo)
 
 	res, _ := userUc.GetOneById(existingUser.ID)
 
@@ -64,7 +64,7 @@ func TestNotFoundById(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	var expectedEmail string = "new_email@test.com"
-	existingUser, _ := createUser()
+	existingUser, _ := util.CreateUser(*userRepo)
 
 	res, _ := userUc.Update(existingUser.ID, repository.UserUpdateParam{Email: expectedEmail})
 
@@ -84,7 +84,7 @@ func TestFailUpdateUser(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	existingUser, _ := createUser()
+	existingUser, _ := util.CreateUser(*userRepo)
 
 	userUc.Delete(existingUser.ID)
 	res, _ := userUc.GetOneById(existingUser.ID)

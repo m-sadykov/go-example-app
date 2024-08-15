@@ -10,7 +10,7 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-	user, _ := createUser()
+	user, _ := util.CreateUser(*userRepo)
 
 	input := handler.LoginInputDto{
 		Email:    user.Email,
@@ -27,7 +27,7 @@ func TestLogin(t *testing.T) {
 func TestLogout(t *testing.T) {
 	t.Parallel()
 
-	existingUser, _ := createUser()
+	existingUser, _ := util.CreateUser(*userRepo)
 	token := createAccessToken(existingUser)
 
 	tests := []struct {
