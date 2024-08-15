@@ -45,7 +45,7 @@ func TestMain(t *testing.M) {
 	accessTokenUc = usecase.NewAccessTokenUseCase(*accessTokenRepo)
 
 	code := t.Run()
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 
 	os.Exit(code)
 }

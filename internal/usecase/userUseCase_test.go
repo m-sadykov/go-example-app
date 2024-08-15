@@ -23,7 +23,7 @@ func TestCreateUser(t *testing.T) {
 	assert.Equal(t, input.Name, res.Name)
 	assert.Equal(t, input.Email, res.Email)
 
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 }
 
 func TestCreateUserWithUniqueEmail(t *testing.T) {
@@ -44,7 +44,7 @@ func TestCreateUserWithUniqueEmail(t *testing.T) {
 	assert.ErrorContainsf(t, err, "unique constraint", "formatted")
 	assert.Error(t, gorm.ErrDuplicatedKey, err)
 
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 }
 
 func TestGetOneById(t *testing.T) {
@@ -54,7 +54,7 @@ func TestGetOneById(t *testing.T) {
 
 	assert.Equal(t, existingUser.ID, res.ID)
 
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 }
 
 func TestNotFoundById(t *testing.T) {
@@ -64,7 +64,7 @@ func TestNotFoundById(t *testing.T) {
 
 	assert.Nil(t, res)
 
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 }
 
 func TestUpdateUser(t *testing.T) {
@@ -75,7 +75,7 @@ func TestUpdateUser(t *testing.T) {
 
 	assert.Equal(t, expectedEmail, res.Email)
 
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 }
 
 func TestFailUpdateUser(t *testing.T) {
@@ -85,7 +85,7 @@ func TestFailUpdateUser(t *testing.T) {
 
 	assert.ErrorContainsf(t, err, "not found", "formatted")
 
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 }
 
 func TestDeleteUser(t *testing.T) {
@@ -96,5 +96,5 @@ func TestDeleteUser(t *testing.T) {
 
 	assert.Nil(t, res)
 
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 }

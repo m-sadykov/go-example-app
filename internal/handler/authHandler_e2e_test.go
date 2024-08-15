@@ -21,7 +21,7 @@ func TestLogin(t *testing.T) {
 
 	assert.Equal(t, http.StatusCreated, req.Code)
 
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 }
 
 func TestLogout(t *testing.T) {
@@ -56,5 +56,5 @@ func TestLogout(t *testing.T) {
 		})
 	}
 
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 }

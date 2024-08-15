@@ -40,7 +40,7 @@ func TestMain(t *testing.M) {
 	// TODO: clear test data after each test
 	// close database connection
 	code := t.Run()
-	util.ClearDatabase(db)
+	defer util.ClearDatabase(db)
 
 	os.Exit(code)
 }
